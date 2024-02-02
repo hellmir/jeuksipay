@@ -55,6 +55,9 @@ dependencies {
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.8'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // health check
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 tasks.named('test') {
