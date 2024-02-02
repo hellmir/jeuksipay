@@ -1,0 +1,31 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: member-service
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:XE
+    username: oracle_username
+    password: oracle_password
+  jpa:
+    hibernate:
+      ddl-auto: create
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.Oracle12cDialect
+          format_sql: true
+    show-sql: true
+    database: oracle
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Seoul
+    serialization:
+      fail-on-empty-beans: false
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+logging:
+  config: classpath:logback-spring.xml
