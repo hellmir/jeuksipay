@@ -15,6 +15,7 @@
 - Java
 - Spring Boot
 - Spring Security
+- Spring Data JPA
 - Spring Batch
 
 ## DevOps
