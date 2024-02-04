@@ -6,19 +6,19 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@localhost:1521:XE
-    username: oracle_username
-    password: oracle_password
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/jeuksipay
+    username: postgresuser
+    password: root
   jpa:
     hibernate:
       ddl-auto: create
       properties:
         hibernate:
-          dialect: org.hibernate.dialect.Oracle12cDialect
+          dialect: org.hibernate.dialect.PostgreSQLDialect
           format_sql: true
     show-sql: true
-    database: oracle
+    database: postgresql
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: Asia/Seoul
