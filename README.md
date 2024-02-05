@@ -23,7 +23,7 @@
 - AWS - EC2
 - AWS - RDS
 - AWS - DynamoDB
-- OracleDB
+- PostgreSQL
 - H2
 - Github Action
 - Docker
