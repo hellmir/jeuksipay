@@ -2,14 +2,14 @@ server:
   port: 8080
 spring:
   application:
-    name: member-service
+    name: member-adapters
   main:
     allow-bean-definition-overriding: true
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/jeuksipay
     username: postgresuser
-    password: root
+    password: postgrepassword
   jpa:
     hibernate:
       ddl-auto: create
@@ -24,6 +24,14 @@ spring:
     time-zone: Asia/Seoul
     serialization:
       fail-on-empty-beans: false
+  cloud:
+    vault:
+      token: token
+      scheme: http
+      host: localhost
+      port: 8200
+  jwt:
+    secret: key
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
