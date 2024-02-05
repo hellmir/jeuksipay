@@ -11,13 +11,17 @@
 ## 📚 관련 URL
 
 - [즉시페이 노션](https://elite-aletopelta-3ca.notion.site/f3b39c8802f045ae881e9ed03d4ee497?pvs=4)
+<br>
 
 ## 🗼 Architecture
 
 ![Architecture](https://github.com/hellmir/jeuksipay/assets/128391669/a2a025dc-d8a8-4a54-9fdf-2c70ceb93a49)
+<br>
 
 ## 🗄️ ERD
+
 ![ERD](https://github.com/hellmir/jeuksipay/assets/128391669/f60c9fda-086e-4430-97de-20eea207a2b9)
+<br><br>
 
 ## 🛠️ Skills
 
