@@ -1,0 +1,4 @@
+.git/
+*.log
+Jenkinsfile
+*.md
