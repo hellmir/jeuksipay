@@ -1,0 +1,51 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    networks:
+      - jeuksipay_network
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    env_file: .env
+    ports:
+      - "5432:5432"
+    environment:
+      - TZ=Asia/Seoul
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_DB=jeuksipay
+
+  member-adapters:
+    image: jeuksipay-member-adapters:0.0.1-SNAPSHOT
+    networks:
+      - jeuksipay_network
+    ports:
+      - "610:8080"
+    depends_on:
+      - postgres
+      - vault
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/jeuksipay
+      - SPRING_DATASOURCE_USERNAME=postgresuser
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+      - SPRING_CLOUD_VAULT_TOKEN=hvs.LCajGoS4DBBs6tLG0UfDXwDZ
+      - SPRING_CLOUD_VAULT_SCHEME=http
+      - SPRING_CLOUD_VAULT_HOST=vault
+      - SPRING_CLOUD_VAULT_PORT=8200
+
+  vault:
+    image: vault:1.13.1
+    networks:
+      - jeuksipay_network
+    container_name: vault
+    ports:
+      - "8200:8200"
+    restart: always
+    cap_add:
+      - IPC_LOCK
+
+networks:
+  jeuksipay_network:
+    driver: bridge

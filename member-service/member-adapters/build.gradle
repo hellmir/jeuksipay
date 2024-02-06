@@ -2,9 +2,10 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.18'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'com.palantir.docker' version '0.25.0'
 }
 
-group = 'personal.jeuksipay.member'
+group = 'personal.jeuksipay.member.adapters'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -22,10 +23,14 @@ repositories {
 }
 
 dependencies {
+    // module
+    implementation project(':common')
+    implementation project(':member-service:member-application')
+    implementation project(':member-service:member-domain')
+
     // spring boot
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.12'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.7.12'
-    implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.12'
 
     // lombok
     compileOnly 'org.projectlombok:lombok:1.18.26'
@@ -64,6 +69,18 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+docker {
+    println(tasks.bootJar.outputs.files)
+    name 'jeuksipay-member-adapters:0.0.1-SNAPSHOT'
+    dockerfile file('../../Dockerfile')
+    files tasks.bootJar.outputs.files
+    buildArgs(['JAR_FILE': tasks.bootJar.outputs.files.singleFile.name])
+}
+
 jar {
     enabled = false
+}
+
+springBoot {
+    mainClass = 'personal.jeuksipay.member.MemberApplication'
 }

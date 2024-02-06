@@ -2,9 +2,10 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.18'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'com.palantir.docker' version '0.25.0'
 }
 
-group = 'personal.jeuksipay.member'
+group = 'personal.jeuksipay.member.domain'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -22,48 +23,32 @@ repositories {
 }
 
 dependencies {
+    // module
+    implementation project(':common')
+
     // spring boot
-    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.12'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.7.12'
-    implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.12'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.12'
 
     // lombok
     compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
-    // json
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-
-    // springfox
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'
-    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
-
     // data
-    implementation 'org.postgresql:postgresql:42.2.5'
-    implementation 'com.h2database:h2:2.1.214'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.12'
 
     // security
     implementation 'org.springframework.boot:spring-boot-starter-security:2.7.8'
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-
-    // vault
-    implementation group: 'org.springframework.vault', name: 'spring-vault-core', version: '2.3.3'
 
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.8'
     testImplementation 'org.springframework.security:spring-security-test'
-
-    // health check
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-jar {
+bootJar {
     enabled = false
 }
