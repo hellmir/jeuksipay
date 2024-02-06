@@ -20,7 +20,7 @@
 
 ## 🗄️ ERD
 
-![ERD](https://github.com/hellmir/jeuksipay/assets/128391669/f60c9fda-086e-4430-97de-20eea207a2b9)
+![ERD](https://github.com/hellmir/jeuksipay/assets/128391669/7fe28981-f686-43ba-892a-86b593cfed83)
 <br><br>
 
 ## 🛠️ Skills
