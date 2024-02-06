@@ -1,4 +1,4 @@
-package personal.jeuksipay.member.adapter.in.web.configuration;
+package personal.jeuksipay.common.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
