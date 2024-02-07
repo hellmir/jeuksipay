@@ -53,8 +53,6 @@ class SignUpServiceTest {
                 email, username, password, password, fullName, phone, List.of(role.toString())
         );
 
-        doNothing().when(signUpPort).saveMember(any(Member.class));
-
         LocalDateTime beforeSignUp = LocalDateTime.now().minusNanos(1);
 
         // when

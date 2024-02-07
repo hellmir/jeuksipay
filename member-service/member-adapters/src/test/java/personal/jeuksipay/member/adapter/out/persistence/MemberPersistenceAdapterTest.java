@@ -13,14 +13,19 @@ import personal.jeuksipay.member.domain.Member;
 import personal.jeuksipay.member.domain.exception.general.DuplicateMemberException;
 import personal.jeuksipay.member.domain.exception.general.DuplicateUsernameException;
 import personal.jeuksipay.member.domain.security.CryptoProvider;
+import personal.jeuksipay.member.domain.wrapper.Email;
 import personal.jeuksipay.member.domain.wrapper.Role;
+import personal.jeuksipay.member.domain.wrapper.Username;
 import personal.jeuksipay.member.testutil.MemberTestObjectFactory;
 
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static personal.jeuksipay.member.domain.exception.message.DuplicateExceptionMessage.*;
+import static personal.jeuksipay.member.domain.exception.message.NotFoundExceptionMessage.*;
 import static personal.jeuksipay.member.domain.wrapper.Role.ROLE_BUSINESS_USER;
 import static personal.jeuksipay.member.domain.wrapper.Role.ROLE_GENERAL_USER;
 import static personal.jeuksipay.member.testutil.MemberTestConstant.*;
@@ -162,5 +167,116 @@ class MemberPersistenceAdapterTest {
         assertThatThrownBy(() -> memberPersistenceAdapter.saveMember(member2))
                 .isInstanceOf(DuplicateMemberException.class)
                 .hasMessage(DUPLICATE_PHONE_EXCEPTION + PHONE1);
+    }
+
+    @DisplayName("회원 ID를 통해 회원을 조회할 수 있다.")
+    @ParameterizedTest
+    @CsvSource({
+            "abcd@abc.com, person1, Abcd1234!, 홍길동, 01012345678, ROLE_GENERAL_USER",
+            "abcd@abcd.com, person2, Abcd12345!, 고길동, 01012345679, ROLE_BUSINESS_USER",
+            "abcd@abcde.com, person3, Abcd123456!, 김길동, 01012345680, ROLE_ADMIN"
+    })
+    void findMemberById(String email, String username, String password,
+                        String fullName, String phone, String role) {
+        // given
+        Member createdMember = MemberTestObjectFactory.createMember(
+                email, username, password, passwordEncoder, fullName, phone, List.of(role)
+        );
+        MemberJpaEntity memberJpaEntity = MemberJpaEntity.from(createdMember, cryptoProvider);
+
+        memberRepository.save(memberJpaEntity);
+
+        // when
+        Member foundMember = memberPersistenceAdapter.findMemberById(memberJpaEntity.getId());
+
+        // then
+        assertThat(foundMember.getEmail()).isEqualTo(Email.of(email));
+        assertThat(foundMember.getUsername()).isEqualTo(Username.of(username));
+        assertThat(foundMember.getEmail()).isEqualTo(Email.of(email));
+        assertThat(foundMember.getUsername()).isEqualTo(Username.of(username));
+    }
+
+    @DisplayName("잘못된 회원 ID로 회원을 조회하면 EntityNotFoundException이 발생한다.")
+    @Test
+    void findMemberByWrongId() {
+        // given
+        MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
+                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
+                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+        );
+        memberRepository.save(memberJpaEntity);
+
+        // when, then
+        assertThatThrownBy(() -> memberPersistenceAdapter.findMemberById(memberJpaEntity.getId() + 1))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage(MEMEBER_ID_NOT_FOUND_EXCEPTION + (memberJpaEntity.getId() + 1));
+    }
+
+    @DisplayName("이메일 주소 또는 사용자 이름을 통해 회원을 조회하고 최종 로그인 시간을 기록할 수 있다.")
+    @ParameterizedTest
+    @CsvSource({
+            "abcd@abc.com, person1, Abcd1234!, 홍길동, 01012345678, ROLE_GENERAL_USER",
+            "abcd@abcd.com, person2, Abcd12345!, 고길동, 01012345679, ROLE_BUSINESS_USER",
+            "abcd@abcde.com, person3, Abcd123456!, 김길동, 01012345680, ROLE_ADMIN"
+    })
+    void findMemberByEmailOrUsername(String email, String username, String password,
+                                     String fullName, String phone, String role) {
+        // given
+        Member createdMember = MemberTestObjectFactory.createMember(
+                email, username, password, passwordEncoder, fullName, phone, List.of(role)
+        );
+        MemberJpaEntity memberJpaEntity = MemberJpaEntity.from(createdMember, cryptoProvider);
+
+        memberRepository.save(memberJpaEntity);
+
+        LocalDateTime beforeLogin = LocalDateTime.now().minusNanos(1);
+
+        // when
+        Member foundMember1 = memberPersistenceAdapter.findMemberByEmailOrUsername(email);
+        Member foundMember2 = memberPersistenceAdapter.findMemberByEmailOrUsername(username);
+
+        // then
+        LocalDateTime afterLogin = LocalDateTime.now().plusNanos(1);
+
+        assertThat(foundMember1.getEmail()).isEqualTo(Email.of(email));
+        assertThat(foundMember1.getUsername()).isEqualTo(Username.of(username));
+        assertThat(foundMember2.getEmail()).isEqualTo(Email.of(email));
+        assertThat(foundMember2.getUsername()).isEqualTo(Username.of(username));
+
+        assertThat(memberJpaEntity.getLastLoggedInAt()).isAfter(beforeLogin);
+        assertThat(memberJpaEntity.getLastLoggedInAt()).isBefore(afterLogin);
+        assertThat(foundMember2.getLastLoggedInAt()).isEqualTo(memberJpaEntity.getLastLoggedInAt());
+    }
+
+    @DisplayName("존재하지 않는 이메일 주소를 통해 회원을 조회하려 하면 EMAIL_NOT_FOUND_EXCEPTION이 발생한다.")
+    @Test
+    void findMemberByNonExistentEmail() {
+        // given
+        MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
+                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
+                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+        );
+        memberRepository.save(memberJpaEntity);
+
+        // when, then
+        assertThatThrownBy(() -> memberPersistenceAdapter.findMemberByEmailOrUsername(EMAIL2))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage(EMAIL_NOT_FOUND_EXCEPTION + EMAIL2);
+    }
+
+    @DisplayName("존재하지 않는 사용자 이름을 통해 회원을 조회하려 하면 USERNAME_NOT_FOUND_EXCEPTION이 발생한다.")
+    @Test
+    void findMemberByNonExistentUsername() {
+        // given
+        MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
+                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
+                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+        );
+        memberRepository.save(memberJpaEntity);
+
+        // when, then
+        assertThatThrownBy(() -> memberPersistenceAdapter.findMemberByEmailOrUsername(USERNAME2))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage(USERNAME_NOT_FOUND_EXCEPTION + USERNAME2);
     }
 }
