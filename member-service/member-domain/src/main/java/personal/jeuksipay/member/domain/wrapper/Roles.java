@@ -74,8 +74,12 @@ public class Roles {
         return false;
     }
 
-    private List<String> toStrings() {
+    public List<String> toStrings() {
         return roles.stream().map(Role::toString).collect(Collectors.toList());
+    }
+
+    public List<String> toDescriptions() {
+        return roles.stream().map(Role::getDescription).collect(Collectors.toList());
     }
 
     private static void validate(List<String> roles) {

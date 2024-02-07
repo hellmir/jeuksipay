@@ -52,6 +52,15 @@ public class Address {
                 .build();
     }
 
+    public Address decrypt(CryptoProvider cryptoProvider) {
+        return Address.builder()
+                .city(cryptoProvider.decrypt(city))
+                .street(cryptoProvider.decrypt(street))
+                .zipcode(cryptoProvider.decrypt(zipcode))
+                .detailedAddress(cryptoProvider.decrypt(detailedAddress))
+                .build();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -27,6 +27,11 @@ public class FullName {
         return new FullName(cryptoProvider.encrypt(fullName));
     }
 
+    public FullName decrypt(CryptoProvider cryptoProvider) {
+        return new FullName(cryptoProvider.decrypt(fullName));
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

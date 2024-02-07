@@ -1,11 +1,13 @@
 package personal.jeuksipay.member.adapter.in.web.mapper;
 
 import personal.jeuksipay.member.adapter.in.web.container.AddressRequest;
+import personal.jeuksipay.member.adapter.in.web.request.SignInRequest;
 import personal.jeuksipay.member.adapter.in.web.request.SignUpRequest;
 import personal.jeuksipay.member.application.port.in.command.AddressCommand;
 import personal.jeuksipay.member.application.port.in.command.SignUpCommand;
+import personal.jeuksipay.member.application.port.in.command.signInCommand;
 
-public class MemberRequestMapper {
+public class MemberRequestToCommandMapper {
     public static SignUpCommand mapToCommand(SignUpRequest signUpRequest) {
         return SignUpCommand.builder()
                 .email(signUpRequest.getEmail())
@@ -17,6 +19,10 @@ public class MemberRequestMapper {
                 .addressCommand(mapToAddressCommand(signUpRequest.getAddressRequest()))
                 .roles(signUpRequest.getRoles())
                 .build();
+    }
+
+    public static signInCommand mapToCommand(SignInRequest signInRequest) {
+        return new signInCommand(signInRequest.getEmailOrUsername(), signInRequest.getPassword());
     }
 
     private static AddressCommand mapToAddressCommand(AddressRequest addressRequest) {
