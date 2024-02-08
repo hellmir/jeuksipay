@@ -29,8 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static personal.jeuksipay.member.domain.wrapper.Role.ROLE_GENERAL_USER;
-import static personal.jeuksipay.member.testutil.MemberTestConstant.EMAIL1;
-import static personal.jeuksipay.member.testutil.MemberTestConstant.PASSWORD1;
+import static personal.jeuksipay.member.testutil.MemberTestConstant.*;
 
 @ActiveProfiles("test")
 @WebMvcTest(controllers = AuthenticationController.class)
@@ -68,6 +67,21 @@ class AuthenticationControllerTest {
                         .with(csrf())
                         .content(objectMapper.writeValueAsString(signInRequest))
                         .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("올바른 리프레시 토큰 값을 입력하면 새로운 엑세스 토큰을 발급할 수 있다.")
+    @Test
+    @WithMockUser
+    void issueNewAccessToken() throws Exception {
+        // given
+        when(authenticationService.issueNewAccessToken(TOKEN_VALUE1)).thenReturn(TOKEN_VALUE2);
+
+        // when, then
+        mockMvc.perform(post("/members/access-token")
+                        .queryParam("refreshToken", TOKEN_VALUE1)
+                        .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

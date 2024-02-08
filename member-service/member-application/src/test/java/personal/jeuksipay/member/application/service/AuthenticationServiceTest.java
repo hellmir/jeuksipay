@@ -11,6 +11,7 @@ import personal.jeuksipay.member.application.port.in.AuthenticationResult;
 import personal.jeuksipay.member.application.port.in.command.signInCommand;
 import personal.jeuksipay.member.application.port.out.AuthenticationPort;
 import personal.jeuksipay.member.application.port.out.FindMemberPort;
+import personal.jeuksipay.member.application.port.out.FindRefreshTokenPort;
 import personal.jeuksipay.member.application.port.out.SaveRefreshTokenPort;
 import personal.jeuksipay.member.application.validation.PasswordValidator;
 import personal.jeuksipay.member.domain.Member;
@@ -41,6 +42,8 @@ class AuthenticationServiceTest {
     private SaveRefreshTokenPort saveRefreshTokenPort;
 
     @Mock
+    private FindRefreshTokenPort findRefreshTokenPort;
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @Mock
@@ -68,5 +71,19 @@ class AuthenticationServiceTest {
         assertThat(authenticationResult.getLastLoggedInAt()).isBeforeOrEqualTo(LocalDateTime.now());
         assertThat(authenticationResult.getAccessToken()).isEqualTo(TOKEN_VALUE1);
         assertThat(authenticationResult.getRefreshToken()).isEqualTo(TOKEN_VALUE2);
+    }
+
+    @DisplayName("리프레시 토큰 값을 통해 엑세스 토큰을 재발급할 수 있다.")
+    @Test
+    void issueNewAccessToken() {
+        // given
+        when(authenticationPort.validateToken(any())).thenReturn(true);
+        when(authenticationPort.generateNewAccessToken(any())).thenReturn(TOKEN_VALUE2);
+
+        // when
+        String newAccessToken = authenticationService.issueNewAccessToken(TOKEN_VALUE1);
+
+        // then
+        assertThat(newAccessToken).isEqualTo(TOKEN_VALUE2);
     }
 }

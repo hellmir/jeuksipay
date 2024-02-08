@@ -27,5 +27,6 @@ public class MemberTestConstant {
     public static final String ZIPCODE = "12345";
     public static final String DETAILED_ADDRESS = "길동아파트 101동 102호";
 
-    public static final String TOKEN_VALUE = "TokenExample";
+    public static final String TOKEN_VALUE1 = "TokenExample1";
+    public static final String TOKEN_VALUE2 = "TokenExample2";
 }
