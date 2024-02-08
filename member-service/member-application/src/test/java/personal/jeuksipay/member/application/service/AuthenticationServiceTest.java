@@ -11,6 +11,7 @@ import personal.jeuksipay.member.application.port.in.AuthenticationResult;
 import personal.jeuksipay.member.application.port.in.command.signInCommand;
 import personal.jeuksipay.member.application.port.out.AuthenticationPort;
 import personal.jeuksipay.member.application.port.out.FindMemberPort;
+import personal.jeuksipay.member.application.port.out.SaveRefreshTokenPort;
 import personal.jeuksipay.member.application.validation.PasswordValidator;
 import personal.jeuksipay.member.domain.Member;
 import personal.jeuksipay.member.testutil.MemberTestObjectFactory;
@@ -21,6 +22,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static personal.jeuksipay.common.adapter.in.ApiConstant.ID_EXAMPLE;
 import static personal.jeuksipay.member.domain.wrapper.Role.ROLE_GENERAL_USER;
 import static personal.jeuksipay.member.testutil.MemberTestConstant.*;
 
@@ -36,6 +38,9 @@ class AuthenticationServiceTest {
     private FindMemberPort findMemberPort;
 
     @Mock
+    private SaveRefreshTokenPort saveRefreshTokenPort;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @Mock
@@ -47,12 +52,13 @@ class AuthenticationServiceTest {
         // given
         signInCommand signInCommand = new signInCommand(EMAIL, PASSWORD1);
         Member member = MemberTestObjectFactory.createMember(
-                EMAIL, USERNAME, PASSWORD1, passwordEncoder, FULL_NAME, PHONE, List.of(ROLE_GENERAL_USER.toString())
+                ID_EXAMPLE, EMAIL, USERNAME, PASSWORD1, passwordEncoder,
+                FULL_NAME, PHONE, List.of(ROLE_GENERAL_USER.toString())
         );
 
-        String accessToken = "accessToken";
         when(findMemberPort.findMemberByEmailOrUsername(signInCommand.getEmailOrUsername())).thenReturn(member);
-        when(authenticationPort.generateAccessToken(any(), any())).thenReturn(accessToken);
+        when(authenticationPort.generateAccessToken(any())).thenReturn(TOKEN_VALUE1);
+        when(authenticationPort.generateRefreshToken(any())).thenReturn(TOKEN_VALUE2);
 
         // when
         AuthenticationResult authenticationResult = authenticationService.signInMember(signInCommand);
@@ -60,6 +66,7 @@ class AuthenticationServiceTest {
         // then
         assertThat(authenticationResult.getRoleDescriptions()).isEqualTo(List.of(ROLE_GENERAL_USER.getDescription()));
         assertThat(authenticationResult.getLastLoggedInAt()).isBeforeOrEqualTo(LocalDateTime.now());
-        assertThat(authenticationResult.getAccessToken()).isEqualTo(accessToken);
+        assertThat(authenticationResult.getAccessToken()).isEqualTo(TOKEN_VALUE1);
+        assertThat(authenticationResult.getRefreshToken()).isEqualTo(TOKEN_VALUE2);
     }
 }
