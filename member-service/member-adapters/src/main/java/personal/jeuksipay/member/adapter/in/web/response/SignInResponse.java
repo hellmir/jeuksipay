@@ -23,12 +23,14 @@ public class SignInResponse {
     private final LocalDateTime loggedInAt;
 
     private final String accessToken;
+    private final String refreshToken;
 
     public static SignInResponse from(AuthenticationResult authenticationResult) {
         return SignInResponse.builder()
                 .roleDescriptions(authenticationResult.getRoleDescriptions())
                 .loggedInAt(authenticationResult.getLastLoggedInAt())
                 .accessToken(authenticationResult.getAccessToken())
+                .refreshToken(authenticationResult.getRefreshToken())
                 .build();
     }
 }

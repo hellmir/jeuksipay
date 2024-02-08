@@ -4,7 +4,7 @@ package personal.jeuksipay.member.testutil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import personal.jeuksipay.member.adapter.in.web.container.AddressRequest;
 import personal.jeuksipay.member.adapter.in.web.request.SignUpRequest;
-import personal.jeuksipay.member.adapter.out.persistence.MemberJpaEntity;
+import personal.jeuksipay.member.adapter.out.persistence.member.MemberJpaEntity;
 import personal.jeuksipay.member.application.port.in.command.AddressCommand;
 import personal.jeuksipay.member.application.port.in.command.SignUpCommand;
 import personal.jeuksipay.member.domain.Address;

@@ -1,4 +1,4 @@
-package personal.jeuksipay.member.adapter.out.persistence;
+package personal.jeuksipay.member.adapter.out.persistence.member;
 
 import lombok.RequiredArgsConstructor;
 import personal.jeuksipay.common.adapter.out.PersistenceAdapter;
