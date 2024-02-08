@@ -59,7 +59,7 @@ class AuthenticationControllerTest {
 
         Member member = mock(Member.class);
         when(member.getRoles()).thenReturn(Roles.from(List.of(ROLE_GENERAL_USER.toString())));
-        AuthenticationResult authenticationResult = AuthenticationResult.from(member, "accessToken");
+        AuthenticationResult authenticationResult = AuthenticationResult.from(member, "accessToken", "refreshToken");
 
         when(authenticationService.signInMember(any(signInCommand.class))).thenReturn(authenticationResult);
 

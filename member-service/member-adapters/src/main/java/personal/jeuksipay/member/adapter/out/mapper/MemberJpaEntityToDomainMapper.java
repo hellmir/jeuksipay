@@ -1,6 +1,6 @@
 package personal.jeuksipay.member.adapter.out.mapper;
 
-import personal.jeuksipay.member.adapter.out.persistence.MemberJpaEntity;
+import personal.jeuksipay.member.adapter.out.persistence.member.MemberJpaEntity;
 import personal.jeuksipay.member.domain.Member;
 import personal.jeuksipay.member.domain.security.CryptoProvider;
 
