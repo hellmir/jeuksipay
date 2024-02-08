@@ -34,7 +34,8 @@ public class WebSecurityConfig extends GlobalMethodSecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .antMatchers("/", "/swagger-ui/**", "/v2/api-docs", "/swagger-resources/**", "/**/signup", "/**/login")
+                .antMatchers("/", "/swagger-ui/**", "/v2/api-docs", "/swagger-resources/**",
+                        "/**/signup", "/**/login", "/**/token")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()

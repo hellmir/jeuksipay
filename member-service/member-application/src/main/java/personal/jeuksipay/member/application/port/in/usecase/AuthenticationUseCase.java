@@ -5,4 +5,6 @@ import personal.jeuksipay.member.application.port.in.command.signInCommand;
 
 public interface AuthenticationUseCase {
     AuthenticationResult signInMember(signInCommand signInCommand);
+
+    String issueNewAccessToken(String refreshToken);
 }
