@@ -20,11 +20,12 @@ public class Member {
     private final Roles roles;
     private final LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private LocalDateTime lastLoggedInAt;
 
     @Builder
     private Member(Long id, Email email, Username username, Password password,
                    FullName fullName, Phone phone, Address address, Roles roles,
-                   LocalDateTime createdAt, LocalDateTime modifiedAt) {
+                   LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime lastLoggedInAt) {
         this.id = id;
         this.email = email;
         this.username = username;
@@ -35,6 +36,7 @@ public class Member {
         this.roles = roles;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
+        this.lastLoggedInAt = lastLoggedInAt;
     }
 
     @Override

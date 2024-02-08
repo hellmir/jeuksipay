@@ -5,6 +5,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import personal.jeuksipay.member.adapter.in.web.container.AddressRequest;
 import personal.jeuksipay.member.adapter.in.web.request.SignUpRequest;
 import personal.jeuksipay.member.adapter.out.persistence.MemberJpaEntity;
+import personal.jeuksipay.member.application.port.in.command.AddressCommand;
+import personal.jeuksipay.member.application.port.in.command.SignUpCommand;
 import personal.jeuksipay.member.domain.Address;
 import personal.jeuksipay.member.domain.Member;
 import personal.jeuksipay.member.domain.security.Password;
@@ -31,6 +33,25 @@ public class MemberTestObjectFactory {
                         .detailedAddress(DETAILED_ADDRESS)
                         .build())
                 .roles(roles)
+                .build();
+    }
+
+    public static SignUpCommand createSignUpCommand(String email, String username, String password, String password1,
+                                                    String fullName, String phone, List<String> role) {
+        return SignUpCommand.builder()
+                .email(email)
+                .username(username)
+                .password(password)
+                .passwordConfirm(password1)
+                .fullName(fullName)
+                .phone(phone)
+                .addressCommand(AddressCommand.builder()
+                        .city(CITY)
+                        .street(STREET)
+                        .zipcode(ZIPCODE)
+                        .detailedAddress(DETAILED_ADDRESS)
+                        .build())
+                .roles(role)
                 .build();
     }
 

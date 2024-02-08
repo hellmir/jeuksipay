@@ -29,6 +29,10 @@ public class Email {
         return new Email(cryptoProvider.encrypt(email));
     }
 
+    public Email decrypt(CryptoProvider cryptoProvider) {
+        return new Email(cryptoProvider.decrypt(email));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

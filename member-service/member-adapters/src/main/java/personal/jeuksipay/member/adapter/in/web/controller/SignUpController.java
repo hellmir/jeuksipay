@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import personal.jeuksipay.common.adapter.in.WebAdapter;
-import personal.jeuksipay.member.adapter.in.web.mapper.MemberRequestMapper;
+import personal.jeuksipay.member.adapter.in.web.mapper.MemberRequestToCommandMapper;
 import personal.jeuksipay.member.adapter.in.web.request.SignUpRequest;
 import personal.jeuksipay.member.adapter.in.web.response.SignUpResponse;
 import personal.jeuksipay.member.application.port.in.command.SignUpCommand;
@@ -34,7 +34,7 @@ class SignUpController {
     @PostMapping("/members/signup")
     ResponseEntity<SignUpResponse> signUpMember
             (@RequestBody @ApiParam(value = SIGN_UP_FORM) SignUpRequest signUpRequest) {
-        SignUpCommand signUpCommand = MemberRequestMapper.mapToCommand(signUpRequest);
+        SignUpCommand signUpCommand = MemberRequestToCommandMapper.mapToCommand(signUpRequest);
         Member member = signUpUseCase.createMember(signUpCommand);
 
         return buildResponse(SignUpResponse.of(member.getId(), member.getCreatedAt()));

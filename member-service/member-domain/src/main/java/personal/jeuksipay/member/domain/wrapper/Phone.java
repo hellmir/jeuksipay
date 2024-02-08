@@ -29,6 +29,10 @@ public class Phone {
         return new Phone(cryptoProvider.encrypt(phone));
     }
 
+    public Phone decrypt(CryptoProvider cryptoProvider) {
+        return new Phone(cryptoProvider.decrypt(phone));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
