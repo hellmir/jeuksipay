@@ -12,15 +12,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import personal.jeuksipay.member.adapter.in.web.security.CustomAuthenticationEntryPoint;
 import personal.jeuksipay.member.adapter.in.web.security.JwtAuthenticationFilter;
-import personal.jeuksipay.member.adapter.in.web.security.JwtTokenProvider;
+import personal.jeuksipay.member.application.port.out.AuthenticationPort;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig extends GlobalMethodSecurityConfiguration {
-
-    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationPort authenticationPort;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
@@ -35,12 +34,11 @@ public class WebSecurityConfig extends GlobalMethodSecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .antMatchers("/", "/swagger-ui/**", "/v2/api-docs", "/swagger-resources/**", "/**/signup")
+                .antMatchers("/", "/swagger-ui/**", "/v2/api-docs", "/swagger-resources/**", "/**/signup", "/**/login")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter
-                                (jwtTokenProvider, customAuthenticationEntryPoint),
+                .addFilterBefore(new JwtAuthenticationFilter(authenticationPort, customAuthenticationEntryPoint),
                         UsernamePasswordAuthenticationFilter.class)
                 .logout().permitAll();
 

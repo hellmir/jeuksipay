@@ -40,6 +40,10 @@ public class Password {
         return passwordEncoder.matches(unencryptedPassword, password);
     }
 
+    String getValue() {
+        return password;
+    }
+
     private static void validate(String password) {
         checkPasswordIsNotBlank(password);
         checkPasswordPattern(password);

@@ -55,10 +55,12 @@ public class MemberJpaEntity {
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private LocalDateTime lastLoggedInAt;
 
     @Builder
-    private MemberJpaEntity(Long id, Email email, Username username, Password password, FullName fullName, Phone phone,
-                            Address address, Roles roles, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    private MemberJpaEntity(Long id, Email email, Username username, Password password,
+                            FullName fullName, Phone phone, Address address, Roles roles,
+                            LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime lastLoggedInAt) {
         this.id = id;
         this.email = email;
         this.username = username;
@@ -67,6 +69,9 @@ public class MemberJpaEntity {
         this.phone = phone;
         this.address = address;
         this.roles = roles;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.lastLoggedInAt = lastLoggedInAt;
     }
 
     public static MemberJpaEntity from(Member member, CryptoProvider cryptoProvider) {
@@ -87,5 +92,9 @@ public class MemberJpaEntity {
                 .createdAt(member.getCreatedAt())
                 .modifiedAt(member.getModifiedAt())
                 .build();
+    }
+
+    public void updateLoginTime() {
+        lastLoggedInAt = LocalDateTime.now();
     }
 }

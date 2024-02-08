@@ -10,7 +10,7 @@ import personal.jeuksipay.member.domain.wrapper.*;
 
 import java.time.LocalDateTime;
 
-public class MemberCommandMapper {
+public class MemberCommandToDomainMapper {
     public static Member mapToDomainEntity(SignUpCommand signUpCommand, PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(Email.of(signUpCommand.getEmail()))

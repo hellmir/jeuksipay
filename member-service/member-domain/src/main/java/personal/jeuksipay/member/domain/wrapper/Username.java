@@ -32,6 +32,10 @@ public class Username {
         return new Username(cryptoProvider.encrypt(username));
     }
 
+    public Username decrypt(CryptoProvider cryptoProvider) {
+        return new Username(cryptoProvider.decrypt(username));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
