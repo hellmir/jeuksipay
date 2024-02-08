@@ -8,8 +8,10 @@ import personal.jeuksipay.member.application.port.in.command.signInCommand;
 import personal.jeuksipay.member.application.port.in.usecase.AuthenticationUseCase;
 import personal.jeuksipay.member.application.port.out.AuthenticationPort;
 import personal.jeuksipay.member.application.port.out.FindMemberPort;
+import personal.jeuksipay.member.application.port.out.SaveRefreshTokenPort;
 import personal.jeuksipay.member.application.validation.PasswordValidator;
 import personal.jeuksipay.member.domain.Member;
+import personal.jeuksipay.member.domain.RefreshToken;
 
 import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
 
@@ -18,6 +20,7 @@ import static org.springframework.transaction.annotation.Isolation.READ_COMMITTE
 public class AuthenticationService implements AuthenticationUseCase {
     private final AuthenticationPort authenticationPort;
     private final FindMemberPort findMemberPort;
+    private final SaveRefreshTokenPort saveRefreshTokenPort;
     private final PasswordValidator passwordValidator;
 
     @Override
@@ -25,15 +28,19 @@ public class AuthenticationService implements AuthenticationUseCase {
     public AuthenticationResult signInMember(signInCommand signInCommand) {
         Member signedUpMember = findMemberPort.findMemberByEmailOrUsername(signInCommand.getEmailOrUsername());
         passwordValidator.validatePassword(signedUpMember.getPassword(), signInCommand.getPassword());
-        String accessToken = issueAccessToken(signedUpMember);
 
-        return AuthenticationResult.from(signedUpMember, accessToken);
+        String accessTokenValue = authenticationPort.generateAccessToken(signedUpMember);
+        String refreshTokenValue = issueRefreshToken(signedUpMember);
+
+        return AuthenticationResult.from(signedUpMember, accessTokenValue, refreshTokenValue);
     }
 
-    private String issueAccessToken(Member member) {
-        String accessToken
-                = authenticationPort.generateAccessToken(String.valueOf(member.getId()), member.getRoles().toStrings());
+    private String issueRefreshToken(Member member) {
+        String refreshToken = authenticationPort.generateRefreshToken(member);
+        saveRefreshTokenPort.saveRefreshToken(
+                RefreshToken.of(member.getId().toString(), member.getRoles().toStrings(), refreshToken)
+        );
 
-        return accessToken;
+        return refreshToken;
     }
 }

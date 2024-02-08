@@ -15,12 +15,14 @@ public class AuthenticationResult {
     private List<String> roleDescriptions;
     private LocalDateTime lastLoggedInAt;
     private String accessToken;
+    private String refreshToken;
 
-    public static AuthenticationResult from(Member member, String accessToken) {
+    public static AuthenticationResult from(Member member, String accessToken, String refreshToken) {
         return AuthenticationResult.builder()
                 .roleDescriptions(member.getRoles().toDescriptions())
                 .lastLoggedInAt(member.getLastLoggedInAt())
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 }

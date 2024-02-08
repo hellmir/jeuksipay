@@ -1,4 +1,4 @@
-package personal.jeuksipay.member.adapter.out.persistence;
+package personal.jeuksipay.member.adapter.out.persistence.member;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

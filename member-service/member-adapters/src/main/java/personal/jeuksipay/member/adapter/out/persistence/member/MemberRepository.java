@@ -1,4 +1,4 @@
-package personal.jeuksipay.member.adapter.out.persistence;
+package personal.jeuksipay.member.adapter.out.persistence.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import personal.jeuksipay.member.domain.wrapper.Email;

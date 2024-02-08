@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import personal.jeuksipay.member.application.port.out.AuthenticationPort;
+import personal.jeuksipay.member.domain.Member;
 
 import javax.annotation.PostConstruct;
 import java.util.Base64;
@@ -23,6 +24,7 @@ public class JwtTokenProvider implements AuthenticationPort {
 
     private static final String KEY_ROLES = "roles";
     private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 10;
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7;
 
     private static final String ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE = "토큰이 비어 있습니다.";
     private static final String MALFORMED_JWT_EXCEPTION_MESSAGE = "유효하지 않은 토큰입니다.";
@@ -37,12 +39,26 @@ public class JwtTokenProvider implements AuthenticationPort {
     }
 
     @Override
-    public String generateAccessToken(String userId, List<String> roles) {
-        Claims claims = Jwts.claims().setSubject(userId);
-        claims.put(KEY_ROLES, roles);
+    public String generateAccessToken(Member member) {
+        Claims claims = generateToken(member.getId().toString(), member.getRoles().toStrings());
 
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION_TIME);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+    @Override
+    public String generateRefreshToken(Member member) {
+        Claims claims = generateToken(member.getId().toString(), member.getRoles().toStrings());
+
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -72,6 +88,13 @@ public class JwtTokenProvider implements AuthenticationPort {
 
         Claims claims = parseClaims(token);
         return !claims.getExpiration().before(new Date());
+    }
+
+    private Claims generateToken(String memberId, List<String> roles) {
+        Claims claims = Jwts.claims().setSubject(memberId);
+        claims.put(KEY_ROLES, roles);
+
+        return claims;
     }
 
     private Claims parseClaims(String token) {

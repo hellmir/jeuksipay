@@ -1,4 +1,4 @@
-package personal.jeuksipay.member.adapter.out.persistence;
+package personal.jeuksipay.member.adapter.out.persistence.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
