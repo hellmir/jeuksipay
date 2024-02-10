@@ -8,6 +8,7 @@ import personal.jeuksipay.member.application.port.in.command.signInCommand;
 import personal.jeuksipay.member.application.port.in.usecase.AuthenticationUseCase;
 import personal.jeuksipay.member.application.port.out.AuthenticationPort;
 import personal.jeuksipay.member.application.port.out.FindMemberPort;
+import personal.jeuksipay.member.application.port.out.FindRefreshTokenPort;
 import personal.jeuksipay.member.application.port.out.SaveRefreshTokenPort;
 import personal.jeuksipay.member.application.validation.PasswordValidator;
 import personal.jeuksipay.member.domain.Member;
@@ -21,6 +22,7 @@ public class AuthenticationService implements AuthenticationUseCase {
     private final AuthenticationPort authenticationPort;
     private final FindMemberPort findMemberPort;
     private final SaveRefreshTokenPort saveRefreshTokenPort;
+    private final FindRefreshTokenPort findRefreshTokenPort;
     private final PasswordValidator passwordValidator;
 
     @Override
@@ -33,6 +35,17 @@ public class AuthenticationService implements AuthenticationUseCase {
         String refreshTokenValue = issueRefreshToken(signedUpMember);
 
         return AuthenticationResult.from(signedUpMember, accessTokenValue, refreshTokenValue);
+    }
+
+    @Override
+    public String issueNewAccessToken(String refreshTokenValue) {
+        boolean tokenIsValid = authenticationPort.validateToken(refreshTokenValue);
+        if (tokenIsValid) {
+            RefreshToken refreshToken = findRefreshTokenPort.findRefreshToken(refreshTokenValue);
+            return authenticationPort.generateNewAccessToken(refreshToken);
+        }
+
+        return null;
     }
 
     private String issueRefreshToken(Member member) {

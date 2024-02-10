@@ -4,13 +4,12 @@ import org.springframework.security.core.Authentication;
 import personal.jeuksipay.member.domain.Member;
 import personal.jeuksipay.member.domain.RefreshToken;
 
-import java.util.List;
-
 public interface AuthenticationPort {
     String generateAccessToken(Member member);
 
     String generateRefreshToken(Member member);
-    
+
+    String generateNewAccessToken(RefreshToken refreshToken);
 
     Authentication getAuthentication(String token);
 

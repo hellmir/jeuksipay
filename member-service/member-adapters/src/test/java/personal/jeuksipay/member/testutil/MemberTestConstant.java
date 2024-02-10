@@ -21,10 +21,12 @@ public class MemberTestConstant {
     public static final String PHONE2 = "01012345679";
     public static final String PHONE3 = "01012345680";
     public static final String PHONE4 = "01012345681";
-    ;
 
     public static final String CITY = "서울";
     public static final String STREET = "테헤란로 231";
     public static final String ZIPCODE = "12345";
     public static final String DETAILED_ADDRESS = "길동아파트 101동 102호";
+
+    public static final String TOKEN_VALUE1 = "TokenExample1";
+    public static final String TOKEN_VALUE2 = "TokenExample2";
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import personal.jeuksipay.member.application.port.out.AuthenticationPort;
 import personal.jeuksipay.member.domain.Member;
+import personal.jeuksipay.member.domain.RefreshToken;
 
 import javax.annotation.PostConstruct;
 import java.util.Base64;
@@ -59,6 +60,21 @@ public class JwtTokenProvider implements AuthenticationPort {
 
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+    @Override
+    public String generateNewAccessToken(RefreshToken refreshToken) {
+        Claims claims = generateToken(refreshToken.getMemberId().toString(), refreshToken.getRoles());
+
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION_TIME);
 
         return Jwts.builder()
                 .setClaims(claims)
