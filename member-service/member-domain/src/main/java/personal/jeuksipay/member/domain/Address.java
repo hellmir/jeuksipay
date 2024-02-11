@@ -2,6 +2,7 @@ package personal.jeuksipay.member.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import personal.jeuksipay.member.domain.security.CryptoProvider;
 
@@ -13,6 +14,7 @@ import static personal.jeuksipay.member.domain.exception.message.InvalidExceptio
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Address {
     private String city;
     private String street;
