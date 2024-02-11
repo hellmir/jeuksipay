@@ -46,6 +46,10 @@ public class Email {
         return Objects.hash(email);
     }
 
+    String getValue() {
+        return email;
+    }
+
     public void throwDuplicateException(CryptoProvider cryptoProvider) {
         throw new DuplicateMemberException(DUPLICATE_EMAIL_EXCEPTION + cryptoProvider.decrypt(email));
     }
