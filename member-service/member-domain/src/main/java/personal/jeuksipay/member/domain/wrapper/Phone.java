@@ -46,6 +46,10 @@ public class Phone {
         return Objects.hash(phone);
     }
 
+    String getValue() {
+        return phone;
+    }
+
     public void throwDuplicateException(CryptoProvider cryptoProvider) {
         throw new DuplicateMemberException(DUPLICATE_PHONE_EXCEPTION + cryptoProvider.decrypt(phone));
     }

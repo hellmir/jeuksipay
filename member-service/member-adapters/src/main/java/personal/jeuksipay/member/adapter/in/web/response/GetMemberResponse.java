@@ -1,10 +1,12 @@
 package personal.jeuksipay.member.adapter.in.web.response;
 
+import lombok.Getter;
 import personal.jeuksipay.member.domain.Member;
 import personal.jeuksipay.member.domain.wrapper.WrapperAccessor;
 
 import java.util.List;
 
+@Getter
 public class GetMemberResponse {
     private final String email;
     private final String fullName;

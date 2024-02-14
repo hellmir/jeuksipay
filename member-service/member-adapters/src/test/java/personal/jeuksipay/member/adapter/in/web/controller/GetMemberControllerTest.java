@@ -48,6 +48,22 @@ class GetMemberControllerTest {
     @MockBean
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
+    @DisplayName("회원 ID를 입력해 자신의 개인정보를 조회할 수 있다.")
+    @Test
+    @WithMockUser
+    void getMemberDetails() throws Exception {
+        // given
+        Member member = MemberTestObjectFactory.createMember(
+                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1, PHONE1, List.of(ROLE_GENERAL_USER.toString())
+        );
+
+        when(getMemberUseCase.getMember(Long.parseLong(ID_EXAMPLE))).thenReturn(member);
+
+        // when, then
+        mockMvc.perform(get("/members/{memberId}/profile", ID_EXAMPLE))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 
     @DisplayName("회원 ID를 입력해 다른 회원의 정보를 조회할 수 있다.")
     @Test

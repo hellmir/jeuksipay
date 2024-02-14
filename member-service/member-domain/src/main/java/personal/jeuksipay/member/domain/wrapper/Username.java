@@ -49,6 +49,10 @@ public class Username {
         return Objects.hash(username);
     }
 
+    String getValue() {
+        return username;
+    }
+
     public void throwDuplicateException(CryptoProvider cryptoProvider) {
         throw new DuplicateUsernameException(DUPLICATE_USERNAME_EXCEPTION + cryptoProvider.decrypt(username));
 
