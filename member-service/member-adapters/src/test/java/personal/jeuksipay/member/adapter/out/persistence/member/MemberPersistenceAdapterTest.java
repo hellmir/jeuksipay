@@ -13,9 +13,7 @@ import personal.jeuksipay.member.domain.Member;
 import personal.jeuksipay.member.domain.exception.general.DuplicateMemberException;
 import personal.jeuksipay.member.domain.exception.general.DuplicateUsernameException;
 import personal.jeuksipay.member.domain.security.CryptoProvider;
-import personal.jeuksipay.member.domain.wrapper.Email;
-import personal.jeuksipay.member.domain.wrapper.Role;
-import personal.jeuksipay.member.domain.wrapper.Username;
+import personal.jeuksipay.member.domain.wrapper.*;
 import personal.jeuksipay.member.testutil.MemberTestObjectFactory;
 
 import javax.persistence.EntityNotFoundException;
@@ -54,10 +52,10 @@ class MemberPersistenceAdapterTest {
             "abcd@abcde.com, person3, Abcd123456!, 김길동, 01012345680, ROLE_GENERAL_USER, ROLE_ADMIN"
     })
     void saveMember(String email, String username, String password,
-                    String fullName, String phone, Role role) {
+                    String fullName, String phone, Role role1, Role role2) {
         // given
         Member member = MemberTestObjectFactory.createMember(
-                email, username, password, passwordEncoder, fullName, phone, List.of(role.toString())
+                email, username, password, passwordEncoder, fullName, phone, List.of(role1.toString(), role2.toString())
         );
 
         // when
@@ -202,7 +200,7 @@ class MemberPersistenceAdapterTest {
         // given
         MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
                 EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+                PHONE1, List.of(ROLE_GENERAL_USER.toString()), cryptoProvider
         );
         memberRepository.save(memberJpaEntity);
 
@@ -254,7 +252,7 @@ class MemberPersistenceAdapterTest {
         // given
         MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
                 EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+                PHONE1, List.of(ROLE_GENERAL_USER.toString()), cryptoProvider
         );
         memberRepository.save(memberJpaEntity);
 
@@ -270,7 +268,7 @@ class MemberPersistenceAdapterTest {
         // given
         MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
                 EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+                PHONE1, List.of(ROLE_GENERAL_USER.toString()), cryptoProvider
         );
         memberRepository.save(memberJpaEntity);
 

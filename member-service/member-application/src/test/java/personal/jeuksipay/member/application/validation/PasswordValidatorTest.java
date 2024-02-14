@@ -11,7 +11,7 @@ import personal.jeuksipay.member.domain.security.Password;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static personal.jeuksipay.member.application.exception.message.IncorrectPasswordExceptionMessage.INCORRECT_PASSWORD_EXCEPTION;
-import static personal.jeuksipay.member.testutil.MemberTestConstant.PASSWORD1;
+import static personal.jeuksipay.member.testutil.MemberTestConstant.PASSWORD;
 
 class PasswordValidatorTest {
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -21,10 +21,10 @@ class PasswordValidatorTest {
     @Test
     void validatePassword() {
         // given
-        Password encodedPassword = Password.from(PASSWORD1, passwordEncoder);
+        Password encodedPassword = Password.from(PASSWORD, passwordEncoder);
 
         // when, then
-        passwordValidator.validatePassword(encodedPassword, PASSWORD1);
+        passwordValidator.validatePassword(encodedPassword, PASSWORD);
     }
 
     @DisplayName("원래 비밀번호와 입력된 비밀번호가 다른 경우 IncorrectPasswordException이 발생한다.")

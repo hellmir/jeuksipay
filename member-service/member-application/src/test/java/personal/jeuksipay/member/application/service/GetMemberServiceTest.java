@@ -42,7 +42,7 @@ class GetMemberServiceTest {
         String role2 = ROLE_ADMIN.toString();
 
         Member member = MemberTestObjectFactory.createMember(
-                ID_EXAMPLE, EMAIL, USERNAME, PASSWORD1, passwordEncoder, FULL_NAME, PHONE, List.of(role1, role2)
+                ID_EXAMPLE, EMAIL, USERNAME, PASSWORD, passwordEncoder, FULL_NAME, PHONE, List.of(role1, role2)
         );
         when(findMemberPort.findMemberById(anyLong())).thenReturn(member);
 
@@ -50,7 +50,7 @@ class GetMemberServiceTest {
         UserDetails userDetails = getMemberService.loadUserByUsername(ID_EXAMPLE);
 
         // then
-        assertThat(passwordEncoder.matches(PASSWORD1, userDetails.getPassword())).isTrue();
+        assertThat(passwordEncoder.matches(PASSWORD, userDetails.getPassword())).isTrue();
         assertThat(userDetails.getUsername()).isEqualTo(ID_EXAMPLE);
         assertThat(userDetails.isAccountNonExpired()).isTrue();
         assertThat(userDetails.isAccountNonLocked()).isTrue();
@@ -66,7 +66,7 @@ class GetMemberServiceTest {
     void getMember() {
         // given
         Member createdMember = MemberTestObjectFactory.createMember(
-                ID_EXAMPLE, EMAIL, USERNAME, PASSWORD1, passwordEncoder,
+                ID_EXAMPLE, EMAIL, USERNAME, PASSWORD, passwordEncoder,
                 FULL_NAME, PHONE, List.of(ROLE_GENERAL_USER.toString())
         );
         when(findMemberPort.findMemberById(Long.parseLong(ID_EXAMPLE))).thenReturn(createdMember);
