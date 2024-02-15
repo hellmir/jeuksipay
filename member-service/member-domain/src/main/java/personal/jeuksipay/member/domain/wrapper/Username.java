@@ -2,7 +2,6 @@ package personal.jeuksipay.member.domain.wrapper;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import personal.jeuksipay.member.domain.exception.general.DuplicateUsernameException;
 import personal.jeuksipay.member.domain.security.CryptoProvider;
 
 import javax.persistence.AttributeConverter;
@@ -10,7 +9,6 @@ import javax.persistence.Converter;
 import java.util.Objects;
 
 import static personal.jeuksipay.member.domain.exception.message.BlankExceptionMessage.USERNAME_NO_VALUE_EXCEPTION;
-import static personal.jeuksipay.member.domain.exception.message.DuplicateExceptionMessage.DUPLICATE_USERNAME_EXCEPTION;
 import static personal.jeuksipay.member.domain.exception.message.InvalidExceptionMessage.INVALID_USERNAME_EXCEPTION;
 
 public class Username {
@@ -51,11 +49,6 @@ public class Username {
 
     String getValue() {
         return username;
-    }
-
-    public void throwDuplicateException(CryptoProvider cryptoProvider) {
-        throw new DuplicateUsernameException(DUPLICATE_USERNAME_EXCEPTION + cryptoProvider.decrypt(username));
-
     }
 
     private static void validate(String username) {
