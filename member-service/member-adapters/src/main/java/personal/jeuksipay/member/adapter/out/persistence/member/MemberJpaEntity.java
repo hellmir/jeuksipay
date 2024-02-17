@@ -82,6 +82,7 @@ public class MemberJpaEntity {
         Address addressToEncrypt = member.getAddress();
 
         return MemberJpaEntity.builder()
+                .id(member.getId())
                 .email(emailToEncrypt.encrypt(cryptoProvider))
                 .username(usernameToEncrypt.encrypt(cryptoProvider))
                 .password(member.getPassword())
@@ -91,6 +92,7 @@ public class MemberJpaEntity {
                 .roles(member.getRoles())
                 .createdAt(member.getCreatedAt())
                 .modifiedAt(member.getModifiedAt())
+                .lastLoggedInAt(member.getLastLoggedInAt())
                 .build();
     }
 

@@ -7,6 +7,7 @@ import personal.jeuksipay.common.application.UseCase;
 import personal.jeuksipay.member.application.port.in.command.SignUpCommand;
 import personal.jeuksipay.member.application.port.in.mapper.MemberCommandToDomainMapper;
 import personal.jeuksipay.member.application.port.in.usecase.SignUpUseCase;
+import personal.jeuksipay.member.application.port.out.FindMemberPort;
 import personal.jeuksipay.member.application.port.out.SignUpPort;
 import personal.jeuksipay.member.application.validation.PasswordValidator;
 import personal.jeuksipay.member.domain.Member;
@@ -18,11 +19,16 @@ import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 @Transactional(isolation = SERIALIZABLE, timeout = 20)
 public class SignUpService implements SignUpUseCase {
     private final SignUpPort signUpPort;
+    private final FindMemberPort findMemberPort;
     private final PasswordValidator passwordValidator;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public Member createMember(SignUpCommand signUpCommand) {
+        findMemberPort.checkDuplicateUsername(signUpCommand.getUsername());
+        findMemberPort.checkDuplicateEmail(signUpCommand.getEmail());
+        findMemberPort.checkDuplicatePhone(signUpCommand.getPhone());
+
         Member member = MemberCommandToDomainMapper.mapToDomainEntity(signUpCommand, passwordEncoder);
         passwordValidator.validatePassword(member.getPassword(), signUpCommand.getPasswordConfirm());
 

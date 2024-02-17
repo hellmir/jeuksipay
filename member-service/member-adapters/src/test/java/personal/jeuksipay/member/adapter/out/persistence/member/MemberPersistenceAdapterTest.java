@@ -13,9 +13,7 @@ import personal.jeuksipay.member.domain.Member;
 import personal.jeuksipay.member.domain.exception.general.DuplicateMemberException;
 import personal.jeuksipay.member.domain.exception.general.DuplicateUsernameException;
 import personal.jeuksipay.member.domain.security.CryptoProvider;
-import personal.jeuksipay.member.domain.wrapper.Email;
-import personal.jeuksipay.member.domain.wrapper.Role;
-import personal.jeuksipay.member.domain.wrapper.Username;
+import personal.jeuksipay.member.domain.wrapper.*;
 import personal.jeuksipay.member.testutil.MemberTestObjectFactory;
 
 import javax.persistence.EntityNotFoundException;
@@ -26,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static personal.jeuksipay.member.domain.exception.message.DuplicateExceptionMessage.*;
 import static personal.jeuksipay.member.domain.exception.message.NotFoundExceptionMessage.*;
-import static personal.jeuksipay.member.domain.wrapper.Role.ROLE_BUSINESS_USER;
 import static personal.jeuksipay.member.domain.wrapper.Role.ROLE_GENERAL_USER;
 import static personal.jeuksipay.member.testutil.MemberTestConstant.*;
 
@@ -54,10 +51,10 @@ class MemberPersistenceAdapterTest {
             "abcd@abcde.com, person3, Abcd123456!, 김길동, 01012345680, ROLE_GENERAL_USER, ROLE_ADMIN"
     })
     void saveMember(String email, String username, String password,
-                    String fullName, String phone, Role role) {
+                    String fullName, String phone, Role role1, Role role2) {
         // given
         Member member = MemberTestObjectFactory.createMember(
-                email, username, password, passwordEncoder, fullName, phone, List.of(role.toString())
+                email, username, password, passwordEncoder, fullName, phone, List.of(role1.toString(), role2.toString())
         );
 
         // when
@@ -108,67 +105,6 @@ class MemberPersistenceAdapterTest {
         assertThat(memberJpaEntity.getModifiedAt()).isEqualTo(member.getModifiedAt());
     }
 
-    @DisplayName("중복된 사용자 이름을 전송하면 DuplicateUsernameException이 발생한다.")
-    @Test
-    void saveMemberByDuplicateUsername() {
-        // given
-        Member member1 = MemberTestObjectFactory.createMember(
-                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
-        );
-        memberPersistenceAdapter.saveMember(member1);
-
-        Member member2 = MemberTestObjectFactory.createMember(
-                EMAIL2, USERNAME1, PASSWORD2, passwordEncoder, FULL_NAME2,
-                PHONE2, List.of(ROLE_BUSINESS_USER.toString())
-        );
-
-        // when, then
-        assertThatThrownBy(() -> memberPersistenceAdapter.saveMember(member2))
-                .isInstanceOf(DuplicateUsernameException.class)
-                .hasMessage(DUPLICATE_USERNAME_EXCEPTION + USERNAME1);
-    }
-
-    @DisplayName("중복된 이메일을 전송하면 DuplicateMemberException이 발생한다.")
-    @Test
-    void saveMemberByDuplicateEmail() {
-        Member member1 = MemberTestObjectFactory.createMember(
-                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
-        );
-        memberPersistenceAdapter.saveMember(member1);
-
-        Member member2 = MemberTestObjectFactory.createMember(
-                EMAIL1, USERNAME2, PASSWORD2, passwordEncoder, FULL_NAME2,
-                PHONE2, List.of(ROLE_BUSINESS_USER.toString())
-        );
-
-        // when, then
-        assertThatThrownBy(() -> memberPersistenceAdapter.saveMember(member2))
-                .isInstanceOf(DuplicateMemberException.class)
-                .hasMessage(DUPLICATE_EMAIL_EXCEPTION + EMAIL1);
-    }
-
-    @DisplayName("중복된 전화번호를 전송하면 DuplicateMemberException이 발생한다.")
-    @Test
-    void saveMemberByDuplicatePhone() {
-        Member member1 = MemberTestObjectFactory.createMember(
-                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
-        );
-        memberPersistenceAdapter.saveMember(member1);
-
-        Member member2 = MemberTestObjectFactory.createMember(
-                EMAIL2, USERNAME2, PASSWORD2, passwordEncoder, FULL_NAME2,
-                PHONE1, List.of(ROLE_BUSINESS_USER.toString())
-        );
-
-        // when, then
-        assertThatThrownBy(() -> memberPersistenceAdapter.saveMember(member2))
-                .isInstanceOf(DuplicateMemberException.class)
-                .hasMessage(DUPLICATE_PHONE_EXCEPTION + PHONE1);
-    }
-
     @DisplayName("회원 ID를 통해 회원을 조회할 수 있다.")
     @ParameterizedTest
     @CsvSource({
@@ -202,7 +138,7 @@ class MemberPersistenceAdapterTest {
         // given
         MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
                 EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+                PHONE1, List.of(ROLE_GENERAL_USER.toString()), cryptoProvider
         );
         memberRepository.save(memberJpaEntity);
 
@@ -254,7 +190,7 @@ class MemberPersistenceAdapterTest {
         // given
         MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
                 EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+                PHONE1, List.of(ROLE_GENERAL_USER.toString()), cryptoProvider
         );
         memberRepository.save(memberJpaEntity);
 
@@ -270,7 +206,7 @@ class MemberPersistenceAdapterTest {
         // given
         MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
                 EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+                PHONE1, List.of(ROLE_GENERAL_USER.toString()), cryptoProvider
         );
         memberRepository.save(memberJpaEntity);
 
@@ -278,5 +214,53 @@ class MemberPersistenceAdapterTest {
         assertThatThrownBy(() -> memberPersistenceAdapter.findMemberByEmailOrUsername(USERNAME2))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage(USERNAME_NOT_FOUND_EXCEPTION + USERNAME2);
+    }
+
+    @DisplayName("중복된 사용자 이름을 전송하면 DuplicateUsernameException이 발생한다.")
+    @Test
+    void checkDuplicateUsername() {
+        // given
+        Member member = MemberTestObjectFactory.createMember(
+                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
+                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+        );
+        memberPersistenceAdapter.saveMember(member);
+
+        // when, then
+        assertThatThrownBy(() -> memberPersistenceAdapter.checkDuplicateUsername(USERNAME1))
+                .isInstanceOf(DuplicateUsernameException.class)
+                .hasMessage(DUPLICATE_USERNAME_EXCEPTION + USERNAME1);
+    }
+
+    @DisplayName("중복된 이메일을 전송하면 DuplicateMemberException이 발생한다.")
+    @Test
+    void checkDuplicateEmail() {
+        // given
+        Member member = MemberTestObjectFactory.createMember(
+                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
+                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+        );
+        memberPersistenceAdapter.saveMember(member);
+
+        // when, then
+        assertThatThrownBy(() -> memberPersistenceAdapter.checkDuplicateEmail(EMAIL1))
+                .isInstanceOf(DuplicateMemberException.class)
+                .hasMessage(DUPLICATE_EMAIL_EXCEPTION + EMAIL1);
+    }
+
+    @DisplayName("중복된 전화번호를 전송하면 DuplicateMemberException이 발생한다.")
+    @Test
+    void checkDuplicatePhone() {
+        // given
+        Member member = MemberTestObjectFactory.createMember(
+                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
+                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+        );
+        memberPersistenceAdapter.saveMember(member);
+
+        // when, then
+        assertThatThrownBy(() -> memberPersistenceAdapter.checkDuplicatePhone(PHONE1))
+                .isInstanceOf(DuplicateMemberException.class)
+                .hasMessage(DUPLICATE_PHONE_EXCEPTION + PHONE1);
     }
 }

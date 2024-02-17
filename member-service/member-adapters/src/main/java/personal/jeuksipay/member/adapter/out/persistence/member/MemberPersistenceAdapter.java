@@ -5,7 +5,10 @@ import personal.jeuksipay.common.adapter.out.PersistenceAdapter;
 import personal.jeuksipay.member.adapter.out.mapper.MemberJpaEntityToDomainMapper;
 import personal.jeuksipay.member.application.port.out.FindMemberPort;
 import personal.jeuksipay.member.application.port.out.SignUpPort;
+import personal.jeuksipay.member.application.port.out.UpdateMemberPort;
 import personal.jeuksipay.member.domain.Member;
+import personal.jeuksipay.member.domain.exception.general.DuplicateMemberException;
+import personal.jeuksipay.member.domain.exception.general.DuplicateUsernameException;
 import personal.jeuksipay.member.domain.security.CryptoProvider;
 import personal.jeuksipay.member.domain.wrapper.Email;
 import personal.jeuksipay.member.domain.wrapper.Phone;
@@ -13,24 +16,19 @@ import personal.jeuksipay.member.domain.wrapper.Username;
 
 import javax.persistence.EntityNotFoundException;
 
+import static personal.jeuksipay.member.domain.exception.message.DuplicateExceptionMessage.*;
 import static personal.jeuksipay.member.domain.exception.message.NotFoundExceptionMessage.*;
 
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class MemberPersistenceAdapter implements SignUpPort, FindMemberPort {
+public class MemberPersistenceAdapter implements SignUpPort, FindMemberPort, UpdateMemberPort {
     private final MemberRepository memberRepository;
     private final CryptoProvider cryptoProvider;
 
     @Override
     public void saveMember(Member member) {
         MemberJpaEntity encryptedMemberJpaEntity = MemberJpaEntity.from(member, cryptoProvider);
-
-        Username encryptedUsername = encryptedMemberJpaEntity.getUsername();
-        Email encryptedEmail = encryptedMemberJpaEntity.getEmail();
-        Phone encryptedPhone = encryptedMemberJpaEntity.getPhone();
-        validateNotDuplicateMember(encryptedUsername, encryptedEmail, encryptedPhone);
-
         memberRepository.save(encryptedMemberJpaEntity);
 
         member.setId(encryptedMemberJpaEntity.getId());
@@ -59,27 +57,24 @@ public class MemberPersistenceAdapter implements SignUpPort, FindMemberPort {
         return MemberJpaEntityToDomainMapper.mapToDomainEntity(memberJpaEntity, cryptoProvider);
     }
 
-    private void validateNotDuplicateMember(Username username, Email email, Phone phone) {
-        checkUsername(username);
-        checkEmail(email);
-        checkPhone(phone);
-    }
-
-    private void checkUsername(Username username) {
-        if (memberRepository.existsByUsername(username)) {
-            username.throwDuplicateException(cryptoProvider);
+    @Override
+    public void checkDuplicateUsername(String username) {
+        if (memberRepository.existsByUsername(Username.of(username).encrypt(cryptoProvider))) {
+            throw new DuplicateUsernameException(DUPLICATE_USERNAME_EXCEPTION + username);
         }
     }
 
-    private void checkEmail(Email email) {
-        if (memberRepository.existsByEmail(email)) {
-            email.throwDuplicateException(cryptoProvider);
+    @Override
+    public void checkDuplicateEmail(String email) {
+        if (memberRepository.existsByEmail(Email.of(email).encrypt(cryptoProvider))) {
+            throw new DuplicateMemberException(DUPLICATE_EMAIL_EXCEPTION + email);
         }
     }
 
-    private void checkPhone(Phone phone) {
-        if (memberRepository.existsByPhone(phone)) {
-            phone.throwDuplicateException(cryptoProvider);
+    @Override
+    public void checkDuplicatePhone(String phone) {
+        if (memberRepository.existsByPhone(Phone.of(phone).encrypt(cryptoProvider))) {
+            throw new DuplicateMemberException(DUPLICATE_PHONE_EXCEPTION + phone);
         }
     }
 }

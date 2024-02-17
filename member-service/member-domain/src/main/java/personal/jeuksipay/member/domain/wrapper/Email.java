@@ -1,6 +1,5 @@
 package personal.jeuksipay.member.domain.wrapper;
 
-import personal.jeuksipay.member.domain.exception.general.DuplicateMemberException;
 import personal.jeuksipay.member.domain.security.CryptoProvider;
 
 import javax.persistence.AttributeConverter;
@@ -8,7 +7,6 @@ import javax.persistence.Converter;
 import java.util.Objects;
 
 import static personal.jeuksipay.member.domain.exception.message.BlankExceptionMessage.EMAIL_NO_VALUE_EXCEPTION;
-import static personal.jeuksipay.member.domain.exception.message.DuplicateExceptionMessage.DUPLICATE_EMAIL_EXCEPTION;
 import static personal.jeuksipay.member.domain.exception.message.InvalidExceptionMessage.INVALID_EMAIL_EXCEPTION;
 
 public class Email {
@@ -48,10 +46,6 @@ public class Email {
 
     String getValue() {
         return email;
-    }
-
-    public void throwDuplicateException(CryptoProvider cryptoProvider) {
-        throw new DuplicateMemberException(DUPLICATE_EMAIL_EXCEPTION + cryptoProvider.decrypt(email));
     }
 
     private static void validate(String email) {

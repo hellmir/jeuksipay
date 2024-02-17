@@ -9,6 +9,7 @@ import personal.jeuksipay.member.application.port.in.command.AddressCommand;
 import personal.jeuksipay.member.application.port.in.command.SignUpCommand;
 import personal.jeuksipay.member.domain.Address;
 import personal.jeuksipay.member.domain.Member;
+import personal.jeuksipay.member.domain.security.CryptoProvider;
 import personal.jeuksipay.member.domain.security.Password;
 import personal.jeuksipay.member.domain.wrapper.*;
 
@@ -64,10 +65,10 @@ public class MemberTestObjectFactory {
                 .fullName(FullName.of(fullName))
                 .phone(Phone.of(phone))
                 .address(Address.builder()
-                        .city("서울")
-                        .street("테헤란로 2길 5")
-                        .zipcode("12345")
-                        .detailedAddress("101동 102호")
+                        .city(CITY)
+                        .street(STREET)
+                        .zipcode(ZIPCODE)
+                        .detailedAddress(DETAILED_ADDRESS)
                         .build())
                 .roles(Roles.from(roles))
                 .build();
@@ -84,10 +85,10 @@ public class MemberTestObjectFactory {
                 .fullName(FullName.of(fullName))
                 .phone(Phone.of(phone))
                 .address(Address.builder()
-                        .city("서울")
-                        .street("테헤란로 2길 5")
-                        .zipcode("12345")
-                        .detailedAddress("101동 102호")
+                        .city(CITY)
+                        .street(STREET)
+                        .zipcode(ZIPCODE)
+                        .detailedAddress(DETAILED_ADDRESS)
                         .build())
                 .roles(Roles.from(roles))
                 .build();
@@ -95,19 +96,21 @@ public class MemberTestObjectFactory {
 
     public static MemberJpaEntity createMemberJpaEntity(String email, String username, String password,
                                                         PasswordEncoder passwordEncoder, String fullName,
-                                                        String phone, List<String> roles) {
+                                                        String phone, List<String> roles,
+                                                        CryptoProvider cryptoProvider) {
         return MemberJpaEntity.builder()
-                .email(Email.of(email))
-                .username(Username.of(username))
+                .email(Email.of(email).encrypt(cryptoProvider))
+                .username(Username.of(username).encrypt(cryptoProvider))
                 .password(Password.from(password, passwordEncoder))
-                .fullName(FullName.of(fullName))
-                .phone(Phone.of(phone))
+                .fullName(FullName.of(fullName).encrypt(cryptoProvider))
+                .phone(Phone.of(phone).encrypt(cryptoProvider))
                 .address(Address.builder()
-                        .city("서울")
-                        .street("테헤란로 2길 5")
-                        .zipcode("12345")
-                        .detailedAddress("101동 102호")
-                        .build())
+                        .city(CITY)
+                        .street(STREET)
+                        .zipcode(ZIPCODE)
+                        .detailedAddress(DETAILED_ADDRESS)
+                        .build()
+                        .encrypt(cryptoProvider))
                 .roles(Roles.from(roles))
                 .build();
     }
