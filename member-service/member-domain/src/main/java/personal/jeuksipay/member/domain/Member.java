@@ -62,5 +62,6 @@ public class Member {
 
     public void updateEmail(String email) {
         this.email = Email.of(email);
+        modifiedAt = LocalDateTime.now();
     }
 }

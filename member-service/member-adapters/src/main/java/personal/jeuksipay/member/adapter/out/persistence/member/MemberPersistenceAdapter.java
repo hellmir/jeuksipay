@@ -77,4 +77,10 @@ public class MemberPersistenceAdapter implements SignUpPort, FindMemberPort, Upd
             throw new DuplicateMemberException(DUPLICATE_PHONE_EXCEPTION + phone);
         }
     }
+
+    @Override
+    public void updateMember(Member member) {
+        MemberJpaEntity memberJpaEntity = MemberJpaEntity.from(member, cryptoProvider);
+        memberRepository.save(memberJpaEntity);
+    }
 }
