@@ -33,12 +33,13 @@ public class MemberRequestToCommandMapper {
         );
     }
 
-    private static AddressCommand mapToAddressCommand(AddressRequest addressRequest) {
+    public static AddressCommand mapToAddressCommand(AddressRequest addressRequest) {
         return AddressCommand.builder()
                 .city(addressRequest.getCity())
                 .street(addressRequest.getStreet())
                 .zipcode(addressRequest.getZipcode())
                 .detailedAddress(addressRequest.getDetailedAddress())
+                .accessToken(addressRequest.getAccessToken())
                 .build();
     }
 }

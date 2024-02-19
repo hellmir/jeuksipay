@@ -16,7 +16,7 @@ public class Member {
     private final Password password;
     private final FullName fullName;
     private final Phone phone;
-    private final Address address;
+    private Address address;
     private final Roles roles;
     private final LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -58,6 +58,10 @@ public class Member {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void updateAddress(Address address) {
+        this.address = address;
     }
 
     public void updateEmail(String email) {

@@ -20,6 +20,9 @@ public class AddressRequest {
     private static final String DETAILED_ADDRESS_VALUE = "상세 주소";
     private static final String DETAILED_ADDRESS_EXAMPLE = "길동아파트 101동 102호";
 
+    private static final String ACCESS_TOKEN_VALUE = "엑세스 토큰 값";
+    private static final String ACCESS_TOKEN_EXAMPLE = "accessToken";
+
     @ApiModelProperty(value = CITY_VALUE, example = CITY_EXAMPLE)
     private String city;
 
@@ -31,4 +34,7 @@ public class AddressRequest {
 
     @ApiModelProperty(value = DETAILED_ADDRESS_VALUE, example = DETAILED_ADDRESS_EXAMPLE)
     private String detailedAddress;
+
+    @ApiModelProperty(value = ACCESS_TOKEN_VALUE, example = ACCESS_TOKEN_EXAMPLE)
+    private String accessToken;
 }
