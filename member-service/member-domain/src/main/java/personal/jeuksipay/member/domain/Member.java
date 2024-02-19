@@ -11,7 +11,7 @@ import java.util.Objects;
 @Getter
 public class Member {
     private Long id;
-    private final Email email;
+    private Email email;
     private final Username username;
     private final Password password;
     private final FullName fullName;
@@ -58,5 +58,10 @@ public class Member {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void updateEmail(String email) {
+        this.email = Email.of(email);
+        modifiedAt = LocalDateTime.now();
     }
 }

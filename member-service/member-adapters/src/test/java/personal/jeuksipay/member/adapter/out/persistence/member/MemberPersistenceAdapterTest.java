@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import personal.jeuksipay.member.domain.Address;
 import personal.jeuksipay.member.domain.Member;
 import personal.jeuksipay.member.domain.exception.general.DuplicateMemberException;
 import personal.jeuksipay.member.domain.exception.general.DuplicateUsernameException;
@@ -262,5 +263,42 @@ class MemberPersistenceAdapterTest {
         assertThatThrownBy(() -> memberPersistenceAdapter.checkDuplicatePhone(PHONE1))
                 .isInstanceOf(DuplicateMemberException.class)
                 .hasMessage(DUPLICATE_PHONE_EXCEPTION + PHONE1);
+    }
+
+
+    @DisplayName("회원 정보를 수정할 수 있다.")
+    @ParameterizedTest
+    @CsvSource({
+            "abcd@abc.com, person1, Abcd1234!, 홍길동, 01012345678, ROLE_GENERAL_USER, ROLE_BUSINESS_USER",
+            "abcd@abcd.com, person2, Abcd12345!, 고길동, 01012345679, ROLE_BUSINESS_USER, ROLE_GENERAL_USER",
+            "abcd@abcde.com, person3, Abcd123456!, 김길동, 01012345680, ROLE_GENERAL_USER, ROLE_ADMIN"
+    })
+    void updateMember(String email, String username, String password,
+                      String fullName, String phone, Role role) {
+        // given
+        MemberJpaEntity createdMemberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
+                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
+                PHONE1, List.of(ROLE_GENERAL_USER.toString()), cryptoProvider
+        );
+        memberRepository.save(createdMemberJpaEntity);
+
+        Member member = MemberTestObjectFactory.createMember(
+                createdMemberJpaEntity.getId().toString(), email, username,
+                password, passwordEncoder, fullName, phone, List.of(role.toString())
+        );
+
+        // when
+        memberPersistenceAdapter.updateMember(member);
+        MemberJpaEntity foundMemberJpaEntity = memberRepository.findById(createdMemberJpaEntity.getId()).get();
+
+        // then
+        assertThat(foundMemberJpaEntity.getEmail().decrypt(cryptoProvider)).isEqualTo(Email.of(email));
+        assertThat(foundMemberJpaEntity.getUsername().decrypt(cryptoProvider)).isEqualTo(Username.of(username));
+        assertThat(foundMemberJpaEntity.getPassword().matchOriginalPassword(passwordEncoder, password)).isTrue();
+        assertThat(foundMemberJpaEntity.getFullName().decrypt(cryptoProvider)).isEqualTo(FullName.of(fullName));
+        assertThat(foundMemberJpaEntity.getPhone().decrypt(cryptoProvider)).isEqualTo(Phone.of(phone));
+        assertThat(foundMemberJpaEntity.getAddress().decrypt(cryptoProvider))
+                .isEqualTo(Address.of(CITY, STREET, ZIPCODE, DETAILED_ADDRESS));
+        assertThat(foundMemberJpaEntity.getRoles()).isEqualTo(createdMemberJpaEntity.getRoles());
     }
 }

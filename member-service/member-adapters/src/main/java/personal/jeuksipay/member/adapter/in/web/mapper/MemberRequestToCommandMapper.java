@@ -1,9 +1,11 @@
 package personal.jeuksipay.member.adapter.in.web.mapper;
 
 import personal.jeuksipay.member.adapter.in.web.container.AddressRequest;
+import personal.jeuksipay.member.adapter.in.web.request.EmailUpdateRequest;
 import personal.jeuksipay.member.adapter.in.web.request.SignInRequest;
 import personal.jeuksipay.member.adapter.in.web.request.SignUpRequest;
 import personal.jeuksipay.member.application.port.in.command.AddressCommand;
+import personal.jeuksipay.member.application.port.in.command.EmailUpdateCommand;
 import personal.jeuksipay.member.application.port.in.command.SignUpCommand;
 import personal.jeuksipay.member.application.port.in.command.signInCommand;
 
@@ -23,6 +25,12 @@ public class MemberRequestToCommandMapper {
 
     public static signInCommand mapToCommand(SignInRequest signInRequest) {
         return new signInCommand(signInRequest.getEmailOrUsername(), signInRequest.getPassword());
+    }
+
+    public static EmailUpdateCommand mapToCommand(EmailUpdateRequest emailUpdateRequest) {
+        return new EmailUpdateCommand(
+                emailUpdateRequest.getPassword(), emailUpdateRequest.getAccessToken(), emailUpdateRequest.getEmail()
+        );
     }
 
     private static AddressCommand mapToAddressCommand(AddressRequest addressRequest) {
