@@ -43,6 +43,22 @@ class UpdateMemberControllerTest {
     @MockBean
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
+    @DisplayName("변경할 주소를 입력해 주소를 변경할 수 있다.")
+    @Test
+    @WithMockUser
+    void updateAddress() throws Exception {
+        // given
+        EmailUpdateRequest emailUpdateRequest = new EmailUpdateRequest(PASSWORD1, TOKEN_VALUE1, EMAIL1);
+
+        // when, then
+        mockMvc.perform(patch("/members/address")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsString(emailUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
     @DisplayName("비밀번호와 변경할 이메일 주소를 입력해 이메일 주소를 변경할 수 있다.")
     @Test
     @WithMockUser
