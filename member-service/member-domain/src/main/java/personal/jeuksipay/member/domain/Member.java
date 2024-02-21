@@ -15,7 +15,7 @@ public class Member {
     private final Username username;
     private final Password password;
     private final FullName fullName;
-    private final Phone phone;
+    private Phone phone;
     private Address address;
     private final Roles roles;
     private final LocalDateTime createdAt;
@@ -66,6 +66,11 @@ public class Member {
 
     public void updateEmail(String email) {
         this.email = Email.of(email);
+        modifiedAt = LocalDateTime.now();
+    }
+
+    public void updatePhone(String phone) {
+        this.phone = Phone.of(phone);
         modifiedAt = LocalDateTime.now();
     }
 }
