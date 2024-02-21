@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import personal.jeuksipay.member.application.port.in.command.AddressCommand;
 import personal.jeuksipay.member.application.port.in.command.EmailUpdateCommand;
+import personal.jeuksipay.member.application.port.in.command.PhoneUpdateCommand;
 import personal.jeuksipay.member.application.port.out.AuthenticationPort;
 import personal.jeuksipay.member.application.port.out.FindMemberPort;
 import personal.jeuksipay.member.application.port.out.UpdateMemberPort;
@@ -73,5 +74,19 @@ class UpdateMemberServiceTest {
 
         // when, then
         updateMemberService.updateEmail(emailUpdateCommand);
+    }
+
+    @DisplayName("회원의 전화번호를 변경할 수 있다.")
+    @Test
+    void updatePhone() {
+        // given
+        PhoneUpdateCommand phoneUpdateCommand = new PhoneUpdateCommand(PASSWORD, TOKEN_VALUE1, EMAIL);
+
+        Member member = mock(Member.class);
+        when(authenticationPort.parseMemberId(any())).thenReturn(ID_EXAMPLE);
+        when(findMemberPort.findMemberById(any())).thenReturn(member);
+
+        // when, then
+        updateMemberService.updatePhone(phoneUpdateCommand);
     }
 }
