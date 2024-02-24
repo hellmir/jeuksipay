@@ -66,7 +66,7 @@ class UpdateMemberServiceTest {
     @Test
     void updateEmail() {
         // given
-        EmailUpdateCommand emailUpdateCommand = new EmailUpdateCommand(PASSWORD, TOKEN_VALUE1, EMAIL);
+        EmailUpdateCommand emailUpdateCommand = new EmailUpdateCommand(PASSWORD1, TOKEN_VALUE1, EMAIL);
 
         Member member = mock(Member.class);
         when(authenticationPort.parseMemberId(any())).thenReturn(ID_EXAMPLE);
@@ -80,7 +80,7 @@ class UpdateMemberServiceTest {
     @Test
     void updatePhone() {
         // given
-        PhoneUpdateCommand phoneUpdateCommand = new PhoneUpdateCommand(PASSWORD, TOKEN_VALUE1, EMAIL);
+        PhoneUpdateCommand phoneUpdateCommand = new PhoneUpdateCommand(PASSWORD1, TOKEN_VALUE1, EMAIL);
 
         Member member = mock(Member.class);
         when(authenticationPort.parseMemberId(any())).thenReturn(ID_EXAMPLE);

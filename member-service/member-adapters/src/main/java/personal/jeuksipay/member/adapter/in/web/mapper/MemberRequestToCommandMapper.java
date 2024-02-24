@@ -1,10 +1,7 @@
 package personal.jeuksipay.member.adapter.in.web.mapper;
 
 import personal.jeuksipay.member.adapter.in.web.container.AddressRequest;
-import personal.jeuksipay.member.adapter.in.web.request.EmailUpdateRequest;
-import personal.jeuksipay.member.adapter.in.web.request.PhoneUpdateRequest;
-import personal.jeuksipay.member.adapter.in.web.request.SignInRequest;
-import personal.jeuksipay.member.adapter.in.web.request.SignUpRequest;
+import personal.jeuksipay.member.adapter.in.web.request.*;
 import personal.jeuksipay.member.application.port.in.command.*;
 
 public class MemberRequestToCommandMapper {
@@ -35,6 +32,12 @@ public class MemberRequestToCommandMapper {
         return new PhoneUpdateCommand(
                 phoneUpdateRequest.getPassword(), phoneUpdateRequest.getAccessToken(), phoneUpdateRequest.getPhone()
         );
+    }
+
+    public static PasswordUpdateCommand mapToCommand(PasswordUpdateRequest passwordUpdateRequest) {
+        return new PasswordUpdateCommand(
+                passwordUpdateRequest.getCurrentPassword(), passwordUpdateRequest.getAccessToken(),
+                passwordUpdateRequest.getPasswordToChange(), passwordUpdateRequest.getPasswordToChangeConfirm());
     }
 
     public static AddressCommand mapToAddressCommand(AddressRequest addressRequest) {

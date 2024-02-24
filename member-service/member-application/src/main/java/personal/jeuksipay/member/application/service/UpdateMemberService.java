@@ -1,10 +1,12 @@
 package personal.jeuksipay.member.application.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import personal.jeuksipay.common.application.UseCase;
 import personal.jeuksipay.member.application.port.in.command.AddressCommand;
 import personal.jeuksipay.member.application.port.in.command.EmailUpdateCommand;
+import personal.jeuksipay.member.application.port.in.command.PasswordUpdateCommand;
 import personal.jeuksipay.member.application.port.in.command.PhoneUpdateCommand;
 import personal.jeuksipay.member.application.port.in.mapper.MemberCommandToDomainMapper;
 import personal.jeuksipay.member.application.port.in.usecase.UpdateMemberUseCase;
@@ -25,6 +27,7 @@ public class UpdateMemberService implements UpdateMemberUseCase {
     private final FindMemberPort findMemberPort;
     private final UpdateMemberPort updateMemberPort;
     private final PasswordValidator passwordValidator;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -60,6 +63,18 @@ public class UpdateMemberService implements UpdateMemberUseCase {
         findMemberPort.checkDuplicatePhone(phoneUpdateCommand.getPhone());
 
         member.updatePhone(phoneUpdateCommand.getPhone());
+        updateMemberPort.updateMember(member);
+    }
+
+    @Override
+    public void updatePassword(PasswordUpdateCommand passwordUpdateCommand) {
+        String memberId = authenticationPort.parseMemberId(passwordUpdateCommand.getAccessToken());
+        Member member = findMemberPort.findMemberById(Long.parseLong(memberId));
+
+        passwordValidator.validatePassword(member.getPassword(), passwordUpdateCommand.getCurrentPassword());
+
+        member.updatePassword(passwordUpdateCommand.getPasswordToChange(), passwordEncoder);
+        passwordValidator.validatePassword(member.getPassword(), passwordUpdateCommand.getPasswordToChangeConfirm());
         updateMemberPort.updateMember(member);
     }
 }
