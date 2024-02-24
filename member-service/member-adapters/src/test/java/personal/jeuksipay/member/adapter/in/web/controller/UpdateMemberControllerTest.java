@@ -12,6 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import personal.jeuksipay.member.adapter.in.web.request.EmailUpdateRequest;
+import personal.jeuksipay.member.adapter.in.web.request.PhoneUpdateRequest;
 import personal.jeuksipay.member.adapter.in.web.security.CustomAuthenticationEntryPoint;
 import personal.jeuksipay.member.adapter.out.security.JwtTokenProvider;
 import personal.jeuksipay.member.application.port.in.usecase.UpdateMemberUseCase;
@@ -70,6 +71,22 @@ class UpdateMemberControllerTest {
         mockMvc.perform(patch("/members/email")
                         .with(csrf())
                         .content(objectMapper.writeValueAsString(emailUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @DisplayName("비밀번호와 변경할 전화번호를 입력해 전화번호를 변경할 수 있다.")
+    @Test
+    @WithMockUser
+    void updatePhone() throws Exception {
+        // given
+        PhoneUpdateRequest phoneUpdateRequest = new PhoneUpdateRequest(PASSWORD1, TOKEN_VALUE1, EMAIL1);
+
+        // when, then
+        mockMvc.perform(patch("/members/phone")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsString(phoneUpdateRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());

@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import personal.jeuksipay.common.application.UseCase;
 import personal.jeuksipay.member.application.port.in.command.AddressCommand;
 import personal.jeuksipay.member.application.port.in.command.EmailUpdateCommand;
+import personal.jeuksipay.member.application.port.in.command.PhoneUpdateCommand;
 import personal.jeuksipay.member.application.port.in.mapper.MemberCommandToDomainMapper;
 import personal.jeuksipay.member.application.port.in.usecase.UpdateMemberUseCase;
 import personal.jeuksipay.member.application.port.out.AuthenticationPort;
@@ -46,7 +47,19 @@ public class UpdateMemberService implements UpdateMemberUseCase {
         findMemberPort.checkDuplicateEmail(emailUpdateCommand.getEmail());
 
         member.updateEmail(emailUpdateCommand.getEmail());
+        updateMemberPort.updateMember(member);
+    }
 
+    @Override
+    public void updatePhone(PhoneUpdateCommand phoneUpdateCommand) {
+        String memberId = authenticationPort.parseMemberId(phoneUpdateCommand.getAccessToken());
+        Member member = findMemberPort.findMemberById(Long.parseLong(memberId));
+
+        passwordValidator.validatePassword(member.getPassword(), phoneUpdateCommand.getPassword());
+
+        findMemberPort.checkDuplicatePhone(phoneUpdateCommand.getPhone());
+
+        member.updatePhone(phoneUpdateCommand.getPhone());
         updateMemberPort.updateMember(member);
     }
 }
