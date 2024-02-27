@@ -12,6 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import personal.jeuksipay.member.adapter.in.web.request.EmailUpdateRequest;
+import personal.jeuksipay.member.adapter.in.web.request.PasswordUpdateRequest;
 import personal.jeuksipay.member.adapter.in.web.request.PhoneUpdateRequest;
 import personal.jeuksipay.member.adapter.in.web.security.CustomAuthenticationEntryPoint;
 import personal.jeuksipay.member.adapter.out.security.JwtTokenProvider;
@@ -87,6 +88,23 @@ class UpdateMemberControllerTest {
         mockMvc.perform(patch("/members/phone")
                         .with(csrf())
                         .content(objectMapper.writeValueAsString(phoneUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @DisplayName("현재 비밀번호와 변경할 비밀번호, 비밀번호 확인을 입력해 비밀번호를 변경할 수 있다.")
+    @Test
+    @WithMockUser
+    void updatePassword() throws Exception {
+        // given
+        PasswordUpdateRequest passwordUpdateRequest
+                = new PasswordUpdateRequest(PASSWORD1, TOKEN_VALUE1, PASSWORD2, PASSWORD2);
+
+        // when, then
+        mockMvc.perform(patch("/members/password")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsString(passwordUpdateRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());

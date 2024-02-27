@@ -53,9 +53,9 @@ class AuthenticationServiceTest {
     @Test
     void signInMember() {
         // given
-        signInCommand signInCommand = new signInCommand(EMAIL, PASSWORD);
+        signInCommand signInCommand = new signInCommand(EMAIL, PASSWORD1);
         Member member = MemberTestObjectFactory.createMember(
-                ID_EXAMPLE, EMAIL, USERNAME, PASSWORD, passwordEncoder,
+                ID_EXAMPLE, EMAIL, USERNAME, PASSWORD1, passwordEncoder,
                 FULL_NAME, PHONE, List.of(ROLE_GENERAL_USER.toString())
         );
 

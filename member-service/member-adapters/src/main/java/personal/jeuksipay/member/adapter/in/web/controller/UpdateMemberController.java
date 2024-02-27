@@ -14,9 +14,11 @@ import personal.jeuksipay.common.adapter.in.WebAdapter;
 import personal.jeuksipay.member.adapter.in.web.container.AddressRequest;
 import personal.jeuksipay.member.adapter.in.web.mapper.MemberRequestToCommandMapper;
 import personal.jeuksipay.member.adapter.in.web.request.EmailUpdateRequest;
+import personal.jeuksipay.member.adapter.in.web.request.PasswordUpdateRequest;
 import personal.jeuksipay.member.adapter.in.web.request.PhoneUpdateRequest;
 import personal.jeuksipay.member.application.port.in.command.AddressCommand;
 import personal.jeuksipay.member.application.port.in.command.EmailUpdateCommand;
+import personal.jeuksipay.member.application.port.in.command.PasswordUpdateCommand;
 import personal.jeuksipay.member.application.port.in.command.PhoneUpdateCommand;
 import personal.jeuksipay.member.application.port.in.usecase.UpdateMemberUseCase;
 
@@ -41,6 +43,11 @@ public class UpdateMemberController {
     private static final String UPDATE_PHONE = "전화번호 변경";
     private static final String UPDATE_PHONE_DESCRIPTION = "비밀번호와 변경할 전화번호를 입력해 전화번호를 수정할 수 있습니다.";
     private static final String UPDATE_PHONE_FORM = "전화번호 변경 양식";
+
+    private static final String UPDATE_PASSWORD = "비밀번호 변경";
+    private static final String UPDATE_PASSWORD_DESCRIPTION
+            = "현재 비밀번호와 변경할 비밀번호를 입력해 비밀번호를 수정할 수 있습니다.";
+    private static final String UPDATE_PASSWORD_FORM = "비밀번호 변경 양식";
 
     @ApiOperation(value = UPDATE_ADDRESS, notes = UPDATE_ADDRESS_DESCRIPTION)
     @PreAuthorize(PRINCIPAL_POINTCUT)
@@ -68,9 +75,20 @@ public class UpdateMemberController {
     @PreAuthorize(PRINCIPAL_POINTCUT)
     @PatchMapping("/phone")
     public ResponseEntity<Void> updatePhone
-            (@RequestBody @ApiParam(value = UPDATE_PHONE_FORM) PhoneUpdateRequest phoneRequestDto) {
-        PhoneUpdateCommand phoneUpdateCommand = MemberRequestToCommandMapper.mapToCommand(phoneRequestDto);
+            (@RequestBody @ApiParam(value = UPDATE_PHONE_FORM) PhoneUpdateRequest phoneUpdateRequest) {
+        PhoneUpdateCommand phoneUpdateCommand = MemberRequestToCommandMapper.mapToCommand(phoneUpdateRequest);
         updateMemberUseCase.updatePhone(phoneUpdateCommand);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @ApiOperation(value = UPDATE_PASSWORD, notes = UPDATE_PASSWORD_DESCRIPTION)
+    @PreAuthorize(PRINCIPAL_POINTCUT)
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updatePassword
+            (@RequestBody @ApiParam(value = UPDATE_PASSWORD_FORM) PasswordUpdateRequest passwordUpdateRequest) {
+        PasswordUpdateCommand passwordUpdateCommand = MemberRequestToCommandMapper.mapToCommand(passwordUpdateRequest);
+        updateMemberUseCase.updatePassword(passwordUpdateCommand);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
