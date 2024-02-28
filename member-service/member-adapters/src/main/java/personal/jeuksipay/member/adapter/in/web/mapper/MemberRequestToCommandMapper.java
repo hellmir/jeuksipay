@@ -40,6 +40,10 @@ public class MemberRequestToCommandMapper {
                 passwordUpdateRequest.getPasswordToChange(), passwordUpdateRequest.getPasswordToChangeConfirm());
     }
 
+    public static MemberDeleteCommand mapToCommand(MemberDeleteRequest memberDeleteRequest) {
+        return new MemberDeleteCommand(memberDeleteRequest.getPassword(), memberDeleteRequest.getAccessToken());
+    }
+
     public static AddressCommand mapToAddressCommand(AddressRequest addressRequest) {
         return AddressCommand.builder()
                 .city(addressRequest.getCity())

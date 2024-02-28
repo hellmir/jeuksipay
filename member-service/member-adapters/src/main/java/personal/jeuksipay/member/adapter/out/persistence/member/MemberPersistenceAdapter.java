@@ -3,6 +3,7 @@ package personal.jeuksipay.member.adapter.out.persistence.member;
 import lombok.RequiredArgsConstructor;
 import personal.jeuksipay.common.adapter.out.PersistenceAdapter;
 import personal.jeuksipay.member.adapter.out.mapper.MemberJpaEntityToDomainMapper;
+import personal.jeuksipay.member.application.port.out.DeleteMemberPort;
 import personal.jeuksipay.member.application.port.out.FindMemberPort;
 import personal.jeuksipay.member.application.port.out.SignUpPort;
 import personal.jeuksipay.member.application.port.out.UpdateMemberPort;
@@ -22,7 +23,7 @@ import static personal.jeuksipay.member.domain.exception.message.NotFoundExcepti
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class MemberPersistenceAdapter implements SignUpPort, FindMemberPort, UpdateMemberPort {
+public class MemberPersistenceAdapter implements SignUpPort, FindMemberPort, UpdateMemberPort, DeleteMemberPort {
     private final MemberRepository memberRepository;
     private final CryptoProvider cryptoProvider;
 
@@ -82,5 +83,10 @@ public class MemberPersistenceAdapter implements SignUpPort, FindMemberPort, Upd
     public void updateMember(Member member) {
         MemberJpaEntity memberJpaEntity = MemberJpaEntity.from(member, cryptoProvider);
         memberRepository.save(memberJpaEntity);
+    }
+
+    @Override
+    public void deleteMember(Long memberId) {
+        memberRepository.deleteById(memberId);
     }
 }
