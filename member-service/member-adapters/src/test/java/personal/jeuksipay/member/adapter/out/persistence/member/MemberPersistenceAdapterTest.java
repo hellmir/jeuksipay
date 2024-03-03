@@ -301,4 +301,21 @@ class MemberPersistenceAdapterTest {
                 .isEqualTo(Address.of(CITY, STREET, ZIPCODE, DETAILED_ADDRESS));
         assertThat(foundMemberJpaEntity.getRoles()).isEqualTo(createdMemberJpaEntity.getRoles());
     }
+
+    @DisplayName("회원 데이터를 삭제할 수 있다.")
+    @Test
+    void deleteMember() {
+        // given
+        MemberJpaEntity createdMemberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
+                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
+                PHONE1, List.of(ROLE_GENERAL_USER.toString()), cryptoProvider
+        );
+        memberRepository.save(createdMemberJpaEntity);
+
+        // when
+        memberPersistenceAdapter.deleteMember(createdMemberJpaEntity.getId());
+
+        // then
+        memberRepository.findById(createdMemberJpaEntity.getId()).isEmpty();
+    }
 }
