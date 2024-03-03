@@ -5,14 +5,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static personal.jeuksipay.member.adapter.in.web.ApiConstant.PASSWORD_EXAMPLE;
-import static personal.jeuksipay.member.adapter.in.web.ApiConstant.PASSWORD_VALUE;
+import static personal.jeuksipay.member.adapter.in.web.ApiConstant.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class PhoneUpdateRequest {
-    private static final String ACCESS_TOKEN_VALUE = "엑세스 토큰 값";
-    private static final String ACCESS_TOKEN_EXAMPLE = "accessToken";
     private static final String PHONE_TO_CHANGE_VALUE = "변경할 전화번호";
     private static final String PHONE_TO_CHANGE_EXAMPLE = "01012345679";
 

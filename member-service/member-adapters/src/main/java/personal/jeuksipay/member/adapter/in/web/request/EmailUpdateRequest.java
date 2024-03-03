@@ -5,14 +5,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static personal.jeuksipay.member.adapter.in.web.ApiConstant.PASSWORD_EXAMPLE;
-import static personal.jeuksipay.member.adapter.in.web.ApiConstant.PASSWORD_VALUE;
+import static personal.jeuksipay.member.adapter.in.web.ApiConstant.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class EmailUpdateRequest {
-    private static final String ACCESS_TOKEN_VALUE = "엑세스 토큰 값";
-    private static final String ACCESS_TOKEN_EXAMPLE = "accessToken";
     private static final String EMAIL_TO_CHANGE_VALUE = "변경할 이메일 주소";
     private static final String EMAIL_TO_CHANGE_EXAMPLE = "abcde@abc.com";
 
