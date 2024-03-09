@@ -73,6 +73,26 @@ public class MemberTestObjectFactory {
                 .build();
     }
 
+    public static Member createMember(String id, String email, String username,
+                                      String password, PasswordEncoder passwordEncoder,
+                                      String fullName, String phone, List<String> roles) {
+        return Member.builder()
+                .id(Long.parseLong(id))
+                .email(Email.of(email))
+                .username(Username.of(username))
+                .password(Password.from(password, passwordEncoder))
+                .fullName(FullName.of(fullName))
+                .phone(Phone.of(phone))
+                .address(Address.builder()
+                        .city("서울")
+                        .street("테헤란로 2길 5")
+                        .zipcode("12345")
+                        .detailedAddress("101동 102호")
+                        .build())
+                .roles(Roles.from(roles))
+                .build();
+    }
+
     public static MemberJpaEntity createMemberJpaEntity(String email, String username, String password,
                                                         PasswordEncoder passwordEncoder, String fullName,
                                                         String phone, List<String> roles) {

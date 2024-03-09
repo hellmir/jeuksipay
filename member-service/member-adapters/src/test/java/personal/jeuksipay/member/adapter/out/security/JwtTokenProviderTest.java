@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import personal.jeuksipay.member.adapter.out.persistence.member.MemberJpaEntity;
 import personal.jeuksipay.member.adapter.out.persistence.member.MemberRepository;
 import personal.jeuksipay.member.domain.Member;
+import personal.jeuksipay.member.domain.RefreshToken;
 import personal.jeuksipay.member.domain.security.CryptoProvider;
 import personal.jeuksipay.member.testutil.MemberTestObjectFactory;
 
@@ -84,6 +85,33 @@ class JwtTokenProviderTest {
         assertThat(jwtTokenProvider.validateToken(refreshToken)).isTrue();
         assertThat(jwtTokenProvider.parseMemberId(refreshToken)).isEqualTo(member.getId().toString());
         assertThat(jwtTokenProvider.getAuthentication(refreshToken).getAuthorities()).hasSize(2)
+                .extracting(GrantedAuthority::getAuthority)
+                .containsExactlyInAnyOrder(role1, role2);
+    }
+
+    @DisplayName("리프레시 토큰의 회원 ID와 권한 정보를 통해 엑세스 엑세스 토큰을 재발급할 수 있다.")
+    @ParameterizedTest
+    @CsvSource({
+            "ROLE_GENERAL_USER, ROLE_BUSINESS_USER", "ROLE_BUSINESS_USER, ROLE_ADMIN", "ROLE_ADMIN, ROLE_GENERAL_USER"
+    })
+    void generateNewAccessToken(String role1, String role2) {
+        // given
+        Member member = MemberTestObjectFactory.createMember(
+                EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1, PHONE1, List.of(role1, role2)
+        );
+        MemberJpaEntity memberJpaEntity = MemberJpaEntity.from(member, cryptoProvider);
+        memberRepository.save(memberJpaEntity);
+
+        member.setId(memberJpaEntity.getId());
+        RefreshToken refreshToken = RefreshToken.of(member.getId().toString(), List.of(role1, role2), TOKEN_VALUE1);
+
+        // when
+        String newAccessToken = jwtTokenProvider.generateNewAccessToken(refreshToken);
+
+        // then
+        assertThat(jwtTokenProvider.validateToken(newAccessToken)).isTrue();
+        assertThat(jwtTokenProvider.parseMemberId(newAccessToken)).isEqualTo(member.getId().toString());
+        assertThat(jwtTokenProvider.getAuthentication(newAccessToken).getAuthorities()).hasSize(2)
                 .extracting(GrantedAuthority::getAuthority)
                 .containsExactlyInAnyOrder(role1, role2);
     }

@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import personal.jeuksipay.member.domain.RefreshToken;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity(name = "refresh_token")
 @Table(name = "refresh_token")
@@ -38,5 +40,20 @@ public class RefreshTokenJpaEntity {
         return new RefreshTokenJpaEntity(
                 refreshToken.getMemberId(), refreshToken.getRoles(), refreshToken.getTokenValue()
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RefreshTokenJpaEntity that = (RefreshTokenJpaEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(memberId, that.memberId)
+                && new ArrayList<>(roles).equals(new ArrayList<>(that.roles))
+                && Objects.equals(tokenValue, that.tokenValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, memberId, roles, tokenValue);
     }
 }
