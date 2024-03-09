@@ -45,6 +45,10 @@ public class FullName {
         return Objects.hash(fullName);
     }
 
+    String getValue() {
+        return fullName;
+    }
+
     private static void validate(String fullName) {
         checkFullNameIsNotBlank(fullName);
         checkFullnamePattern(fullName);

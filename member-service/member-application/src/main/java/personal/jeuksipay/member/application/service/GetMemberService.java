@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import personal.jeuksipay.common.application.UseCase;
 import personal.jeuksipay.member.application.port.in.usecase.GetMemberUseCase;
 import personal.jeuksipay.member.application.port.out.FindMemberPort;
+import personal.jeuksipay.member.domain.Member;
 import personal.jeuksipay.member.domain.security.CustomUserDetails;
 
 import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
@@ -15,11 +16,16 @@ import static org.springframework.transaction.annotation.Isolation.READ_COMMITTE
 @RequiredArgsConstructor
 @UseCase
 @Transactional(isolation = READ_COMMITTED, readOnly = true, timeout = 10)
-public class GetMemberService implements GetMemberUseCase, UserDetailsService {
+public class GetMemberService implements UserDetailsService, GetMemberUseCase {
     private final FindMemberPort findMemberPort;
 
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
         return new CustomUserDetails(findMemberPort.findMemberById(Long.parseLong(memberId)));
+    }
+
+    @Override
+    public Member getMember(Long memberId) {
+        return findMemberPort.findMemberById(memberId);
     }
 }

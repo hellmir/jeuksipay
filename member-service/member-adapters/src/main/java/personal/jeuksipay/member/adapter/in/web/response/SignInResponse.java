@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 @Getter
 public class SignInResponse {
+    private final Long memberId;
     private final List<String> roleDescriptions;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -27,6 +28,7 @@ public class SignInResponse {
 
     public static SignInResponse from(AuthenticationResult authenticationResult) {
         return SignInResponse.builder()
+                .memberId(authenticationResult.getMemberId())
                 .roleDescriptions(authenticationResult.getRoleDescriptions())
                 .loggedInAt(authenticationResult.getLastLoggedInAt())
                 .accessToken(authenticationResult.getAccessToken())

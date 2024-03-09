@@ -60,4 +60,30 @@ class GetMemberServiceTest {
                 .extracting(GrantedAuthority::getAuthority)
                 .containsExactlyInAnyOrder(role1, role2);
     }
+
+    @DisplayName("회원 ID를 통해 회원 정보를 조회할 수 있다.")
+    @Test
+    void getMember() {
+        // given
+        Member createdMember = MemberTestObjectFactory.createMember(
+                ID_EXAMPLE, EMAIL, USERNAME, PASSWORD1, passwordEncoder,
+                FULL_NAME, PHONE, List.of(ROLE_GENERAL_USER.toString())
+        );
+        when(findMemberPort.findMemberById(Long.parseLong(ID_EXAMPLE))).thenReturn(createdMember);
+
+        // when
+        Member foundMember = getMemberService.getMember(Long.parseLong(ID_EXAMPLE));
+
+        // then
+        assertThat(foundMember.getId()).isEqualTo(createdMember.getId());
+        assertThat(foundMember.getEmail()).isEqualTo(createdMember.getEmail());
+        assertThat(foundMember.getUsername()).isEqualTo(createdMember.getUsername());
+        assertThat(foundMember.getPassword()).isEqualTo(createdMember.getPassword());
+        assertThat(foundMember.getFullName()).isEqualTo(createdMember.getFullName());
+        assertThat(foundMember.getPhone()).isEqualTo(createdMember.getPhone());
+        assertThat(foundMember.getRoles()).isEqualTo(createdMember.getRoles());
+        assertThat(foundMember.getCreatedAt()).isEqualTo(createdMember.getCreatedAt());
+        assertThat(foundMember.getModifiedAt()).isEqualTo(createdMember.getModifiedAt());
+        assertThat(foundMember.getLastLoggedInAt()).isEqualTo(createdMember.getLastLoggedInAt());
+    }
 }
