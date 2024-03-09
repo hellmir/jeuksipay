@@ -11,4 +11,5 @@ public class AddressCommand {
     private String street;
     private String zipcode;
     private String detailedAddress;
+    private String accessToken;
 }

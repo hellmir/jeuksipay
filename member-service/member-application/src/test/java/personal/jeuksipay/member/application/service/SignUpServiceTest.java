@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import personal.jeuksipay.member.application.port.in.command.SignUpCommand;
+import personal.jeuksipay.member.application.port.out.FindMemberPort;
 import personal.jeuksipay.member.application.port.out.SignUpPort;
 import personal.jeuksipay.member.application.validation.PasswordValidator;
 import personal.jeuksipay.member.domain.Address;
@@ -32,6 +33,9 @@ class SignUpServiceTest {
 
     @Mock
     private SignUpPort signUpPort;
+
+    @Mock
+    private FindMemberPort findMemberPort;
 
     @Mock
     private PasswordEncoder passwordEncoder;

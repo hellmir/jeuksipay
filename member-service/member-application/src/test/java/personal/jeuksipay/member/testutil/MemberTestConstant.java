@@ -5,6 +5,7 @@ public class MemberTestConstant {
     public static final String USERNAME = "person1";
 
     public static final String PASSWORD1 = "Abcd1234!";
+    public static final String PASSWORD2 = "Abcd1234";
 
     public static final String FULL_NAME = "홍길동";
     public static final String PHONE = "01012345678";

@@ -2,6 +2,7 @@ package personal.jeuksipay.member.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import personal.jeuksipay.member.domain.security.Password;
 import personal.jeuksipay.member.domain.wrapper.*;
 
@@ -11,12 +12,12 @@ import java.util.Objects;
 @Getter
 public class Member {
     private Long id;
-    private final Email email;
+    private Email email;
     private final Username username;
-    private final Password password;
+    private Password password;
     private final FullName fullName;
-    private final Phone phone;
-    private final Address address;
+    private Phone phone;
+    private Address address;
     private final Roles roles;
     private final LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -58,5 +59,24 @@ public class Member {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void updateAddress(Address address) {
+        this.address = address;
+    }
+
+    public void updateEmail(String email) {
+        this.email = Email.of(email);
+        modifiedAt = LocalDateTime.now();
+    }
+
+    public void updatePhone(String phone) {
+        this.phone = Phone.of(phone);
+        modifiedAt = LocalDateTime.now();
+    }
+
+    public void updatePassword(String passwordToChange, PasswordEncoder passwordEncoder) {
+        this.password = Password.from(passwordToChange, passwordEncoder);
+        modifiedAt = LocalDateTime.now();
     }
 }

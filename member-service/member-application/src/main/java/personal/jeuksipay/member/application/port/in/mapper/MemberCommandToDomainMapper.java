@@ -25,7 +25,7 @@ public class MemberCommandToDomainMapper {
                 .build();
     }
 
-    private static Address mapToAddress(AddressCommand addressCommand) {
+    public static Address mapToAddress(AddressCommand addressCommand) {
         String city = addressCommand.getCity();
         String street = addressCommand.getStreet();
         String zipcode = addressCommand.getZipcode();

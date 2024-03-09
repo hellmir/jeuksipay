@@ -42,16 +42,14 @@ class MemberRepositoryTest {
         Email email2 = Email.of(EMAIL2);
         MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
                 EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+                PHONE1, List.of(ROLE_GENERAL_USER.toString()), cryptoProvider
         );
-
-        memberJpaEntity.getEmail().encrypt(cryptoProvider);
 
         memberRepository.save(memberJpaEntity);
 
         // when
-        boolean result1 = memberRepository.existsByEmail(email1);
-        boolean result2 = memberRepository.existsByEmail(email2);
+        boolean result1 = memberRepository.existsByEmail(email1.encrypt(cryptoProvider));
+        boolean result2 = memberRepository.existsByEmail(email2.encrypt(cryptoProvider));
 
         // then
         assertThat(result1).isTrue();
@@ -66,16 +64,14 @@ class MemberRepositoryTest {
         Username username2 = Username.of(USERNAME2);
         MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
                 EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+                PHONE1, List.of(ROLE_GENERAL_USER.toString()), cryptoProvider
         );
-
-        memberJpaEntity.getUsername().encrypt(cryptoProvider);
 
         memberRepository.save(memberJpaEntity);
 
         // when
-        boolean result1 = memberRepository.existsByUsername(username1);
-        boolean result2 = memberRepository.existsByUsername(username2);
+        boolean result1 = memberRepository.existsByUsername(username1.encrypt(cryptoProvider));
+        boolean result2 = memberRepository.existsByUsername(username2.encrypt(cryptoProvider));
 
         // then
         assertThat(result1).isTrue();
@@ -90,16 +86,14 @@ class MemberRepositoryTest {
         Phone phone2 = Phone.of(PHONE2);
         MemberJpaEntity memberJpaEntity = MemberTestObjectFactory.createMemberJpaEntity(
                 EMAIL1, USERNAME1, PASSWORD1, passwordEncoder, FULL_NAME1,
-                PHONE1, List.of(ROLE_GENERAL_USER.toString())
+                PHONE1, List.of(ROLE_GENERAL_USER.toString()), cryptoProvider
         );
-
-        memberJpaEntity.getPhone().encrypt(cryptoProvider);
 
         memberRepository.save(memberJpaEntity);
 
         // when
-        boolean result1 = memberRepository.existsByPhone(phone1);
-        boolean result2 = memberRepository.existsByPhone(phone2);
+        boolean result1 = memberRepository.existsByPhone(phone1.encrypt(cryptoProvider));
+        boolean result2 = memberRepository.existsByPhone(phone2.encrypt(cryptoProvider));
 
         // then
         assertThat(result1).isTrue();
