@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import personal.jeuksipay.common.application.aop.MemoryUtil;
 import personal.jeuksipay.member.application.port.in.command.SignUpCommand;
-import personal.jeuksipay.member.application.port.in.command.signInCommand;
+import personal.jeuksipay.member.application.port.in.command.SignInCommand;
 
 import static personal.jeuksipay.common.application.aop.LogMessage.PERFORMANCE_MEASUREMENT;
 
@@ -57,7 +57,7 @@ public class MemberLoggingAspect {
     }
 
     @Around(SIGN_IN_POINTCUT)
-    public Object logAroundForSignInCommand(ProceedingJoinPoint joinPoint, signInCommand signInCommand) throws Throwable {
+    public Object logAroundForSignInCommand(ProceedingJoinPoint joinPoint, SignInCommand signInCommand) throws Throwable {
         log.info(SIGN_IN_START,
                 joinPoint.getSignature().getDeclaringType().getSimpleName(),
                 joinPoint.getSignature().getName(), signInCommand.getEmailOrUsername());

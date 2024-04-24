@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import personal.jeuksipay.common.application.UseCase;
 import personal.jeuksipay.member.application.port.in.AuthenticationResult;
-import personal.jeuksipay.member.application.port.in.command.signInCommand;
+import personal.jeuksipay.member.application.port.in.command.SignInCommand;
 import personal.jeuksipay.member.application.port.in.usecase.AuthenticationUseCase;
 import personal.jeuksipay.member.application.port.out.AuthenticationPort;
 import personal.jeuksipay.member.application.port.out.FindMemberPort;
@@ -27,7 +27,7 @@ public class AuthenticationService implements AuthenticationUseCase {
 
     @Override
     @Transactional(isolation = READ_COMMITTED, timeout = 15)
-    public AuthenticationResult signInMember(signInCommand signInCommand) {
+    public AuthenticationResult signInMember(SignInCommand signInCommand) {
         Member signedUpMember = findMemberPort.findMemberByEmailOrUsername(signInCommand.getEmailOrUsername());
         passwordValidator.validatePassword(signedUpMember.getPassword(), signInCommand.getPassword());
 

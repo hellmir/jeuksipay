@@ -15,7 +15,7 @@ public class VaultAdapter {
         VaultKeyValueOperations ops = vaultTemplate
                 .opsForKeyValue("kv-v1/data/encrypt", VaultKeyValueOperationsSupport.KeyValueBackend.KV_2);
         String key = (String) ops.get("dbkey").getData().get("key");
-        this.encryptor = new AESProvider(key);
+        encryptor = new AESProvider(key);
     }
 
     public String encrypt(String plainText) {

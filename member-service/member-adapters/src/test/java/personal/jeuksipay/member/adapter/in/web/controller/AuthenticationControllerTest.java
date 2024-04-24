@@ -14,7 +14,7 @@ import personal.jeuksipay.member.adapter.in.web.request.SignInRequest;
 import personal.jeuksipay.member.adapter.in.web.security.CustomAuthenticationEntryPoint;
 import personal.jeuksipay.member.adapter.out.security.JwtTokenProvider;
 import personal.jeuksipay.member.application.port.in.AuthenticationResult;
-import personal.jeuksipay.member.application.port.in.command.signInCommand;
+import personal.jeuksipay.member.application.port.in.command.SignInCommand;
 import personal.jeuksipay.member.application.port.in.usecase.AuthenticationUseCase;
 import personal.jeuksipay.member.domain.Member;
 import personal.jeuksipay.member.domain.wrapper.Roles;
@@ -60,7 +60,7 @@ class AuthenticationControllerTest {
         when(member.getRoles()).thenReturn(Roles.from(List.of(ROLE_GENERAL_USER.toString())));
         AuthenticationResult authenticationResult = AuthenticationResult.from(member, "accessToken", "refreshToken");
 
-        when(authenticationUseCase.signInMember(any(signInCommand.class))).thenReturn(authenticationResult);
+        when(authenticationUseCase.signInMember(any(SignInCommand.class))).thenReturn(authenticationResult);
 
         // when, then
         mockMvc.perform(post("/members/login")
