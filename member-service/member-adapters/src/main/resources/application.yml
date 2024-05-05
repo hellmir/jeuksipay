@@ -32,6 +32,16 @@ spring:
       port: 8200
   jwt:
     secret: key
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: id
+            client-secret: secret
+            scope:
+              - email
+              - profile
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
