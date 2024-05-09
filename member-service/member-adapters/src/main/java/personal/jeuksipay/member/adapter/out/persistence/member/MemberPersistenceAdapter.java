@@ -36,6 +36,12 @@ public class MemberPersistenceAdapter implements SignUpPort, FindMemberPort, Upd
     }
 
     @Override
+    public void saveOauthMember(Member member) {
+        MemberJpaEntity encryptedMemberJpaEntity = MemberJpaEntity.fromOauth(member, cryptoProvider);
+        memberRepository.save(encryptedMemberJpaEntity);
+    }
+
+    @Override
     public Member findMemberById(Long memberId) {
         MemberJpaEntity memberJpaEntity = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(MEMEBER_ID_NOT_FOUND_EXCEPTION + memberId));
@@ -52,6 +58,17 @@ public class MemberPersistenceAdapter implements SignUpPort, FindMemberPort, Upd
                 : memberRepository.findByUsername(Username.of(emailOrUsername).encrypt(cryptoProvider))
                 .orElseThrow(() -> new EntityNotFoundException
                         (USERNAME_NOT_FOUND_EXCEPTION + emailOrUsername));
+
+        memberJpaEntity.updateLoginTime();
+
+        return MemberJpaEntityToDomainMapper.mapToDomainEntity(memberJpaEntity, cryptoProvider);
+    }
+
+    @Override
+    public Member findMemberByEmail(String oauthEmail) {
+        MemberJpaEntity memberJpaEntity = memberRepository.findByEmail(Email.of(oauthEmail).encrypt(cryptoProvider))
+                .orElseThrow(() -> new EntityNotFoundException
+                        (EMAIL_NOT_FOUND_EXCEPTION + oauthEmail));
 
         memberJpaEntity.updateLoginTime();
 
@@ -81,8 +98,8 @@ public class MemberPersistenceAdapter implements SignUpPort, FindMemberPort, Upd
 
     @Override
     public void updateMember(Member member) {
-        MemberJpaEntity memberJpaEntity = MemberJpaEntity.from(member, cryptoProvider);
-        memberRepository.save(memberJpaEntity);
+        MemberJpaEntity encryptedMemberJpaEntity = MemberJpaEntity.from(member, cryptoProvider);
+        memberRepository.save(encryptedMemberJpaEntity);
     }
 
     @Override

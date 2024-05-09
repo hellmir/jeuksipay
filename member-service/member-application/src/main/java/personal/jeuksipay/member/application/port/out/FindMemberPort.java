@@ -7,6 +7,8 @@ public interface FindMemberPort {
 
     Member findMemberByEmailOrUsername(String emailOrUsername);
 
+    Member findMemberByEmail(String oauthEmail);
+
     void checkDuplicateUsername(String username);
 
     void checkDuplicateEmail(String email);

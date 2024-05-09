@@ -4,4 +4,6 @@ import personal.jeuksipay.member.domain.Member;
 
 public interface SignUpPort {
     void saveMember(Member member);
+
+    void saveOauthMember(Member member);
 }

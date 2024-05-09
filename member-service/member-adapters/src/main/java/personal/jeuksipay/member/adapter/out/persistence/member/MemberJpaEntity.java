@@ -29,21 +29,23 @@ public class MemberJpaEntity {
     private Email email;
 
     @Convert(converter = Username.UsernameConverter.class)
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(unique = true, length = 50)
     private Username username;
 
     @Convert(converter = Password.PasswordConverter.class)
-    @Column(nullable = false)
     @JsonIgnore
     private Password password;
 
+    @Convert(converter = OauthName.OauthNameConverter.class)
+    private OauthName oauthName;
+
     @Convert(converter = FullName.FullNameConverter.class)
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     @JsonIgnore
     private FullName fullName;
 
     @Convert(converter = Phone.PhoneConverter.class)
-    @Column(nullable = false, unique = true, length = 40)
+    @Column(unique = true, length = 40)
     @JsonIgnore
     private Phone phone;
 
@@ -58,13 +60,14 @@ public class MemberJpaEntity {
     private LocalDateTime lastLoggedInAt;
 
     @Builder
-    private MemberJpaEntity(Long id, Email email, Username username, Password password,
+    private MemberJpaEntity(Long id, Email email, Username username, Password password, OauthName oauthName,
                             FullName fullName, Phone phone, Address address, Roles roles,
                             LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime lastLoggedInAt) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
+        this.oauthName = oauthName;
         this.fullName = fullName;
         this.phone = phone;
         this.address = address;
@@ -77,6 +80,7 @@ public class MemberJpaEntity {
     public static MemberJpaEntity from(Member member, CryptoProvider cryptoProvider) {
         Email emailToEncrypt = member.getEmail();
         Username usernameToEncrypt = member.getUsername();
+        OauthName oauthNameToEncrypt = member.getOauthName();
         FullName fullNameToEncrypt = member.getFullName();
         Phone phoneToEncrypt = member.getPhone();
         Address addressToEncrypt = member.getAddress();
@@ -85,6 +89,7 @@ public class MemberJpaEntity {
                 .id(member.getId())
                 .email(emailToEncrypt.encrypt(cryptoProvider))
                 .username(usernameToEncrypt.encrypt(cryptoProvider))
+                .oauthName(oauthNameToEncrypt == null ? null : oauthNameToEncrypt.encrypt(cryptoProvider))
                 .password(member.getPassword())
                 .fullName(fullNameToEncrypt.encrypt(cryptoProvider))
                 .phone(phoneToEncrypt.encrypt(cryptoProvider))
@@ -93,6 +98,16 @@ public class MemberJpaEntity {
                 .createdAt(member.getCreatedAt())
                 .modifiedAt(member.getModifiedAt())
                 .lastLoggedInAt(member.getLastLoggedInAt())
+                .build();
+    }
+
+    public static MemberJpaEntity fromOauth(Member member, CryptoProvider cryptoProvider) {
+        Email emailToEncrypt = member.getEmail();
+        OauthName oauthNameToEncrypt = member.getOauthName();
+
+        return MemberJpaEntity.builder()
+                .email(emailToEncrypt.encrypt(cryptoProvider))
+                .oauthName(oauthNameToEncrypt.encrypt(cryptoProvider))
                 .build();
     }
 
