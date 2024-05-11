@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import personal.jeuksipay.common.application.UseCase;
 import personal.jeuksipay.member.application.port.in.usecase.OAuth2UserCustomUseCase;
 import personal.jeuksipay.member.application.port.out.FindMemberPort;
 import personal.jeuksipay.member.application.port.out.SignUpPort;
@@ -16,7 +17,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Service
+@UseCase
 public class OAuth2UserCustomService extends DefaultOAuth2UserService implements OAuth2UserCustomUseCase {
     private final FindMemberPort findMemberPort;
     private final UpdateMemberPort updateMemberPort;
