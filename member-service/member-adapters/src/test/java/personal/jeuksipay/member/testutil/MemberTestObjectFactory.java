@@ -56,6 +56,30 @@ public class MemberTestObjectFactory {
                 .build();
     }
 
+    public static Member createMember(String email, String oauthName) {
+        return Member.builder()
+                .email(Email.of(email))
+                .oauthName(OauthName.of(oauthName))
+                .build();
+    }
+
+    public static Member createMember(String email, String password, PasswordEncoder passwordEncoder,
+                                      String fullName, String phone, List<String> roles) {
+        return Member.builder()
+                .email(Email.of(email))
+                .password(Password.from(password, passwordEncoder))
+                .fullName(FullName.of(fullName))
+                .phone(Phone.of(phone))
+                .address(Address.builder()
+                        .city(CITY)
+                        .street(STREET)
+                        .zipcode(ZIPCODE)
+                        .detailedAddress(DETAILED_ADDRESS)
+                        .build())
+                .roles(Roles.from(roles))
+                .build();
+    }
+
     public static Member createMember(String email, String username, String password, PasswordEncoder passwordEncoder,
                                       String fullName, String phone, List<String> roles) {
         return Member.builder()
