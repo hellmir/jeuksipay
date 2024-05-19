@@ -171,15 +171,15 @@ class MemberPersistenceAdapterTest {
     @DisplayName("이메일 주소를 통해 회원을 조회하고 최종 로그인 시간을 기록할 수 있다.")
     @ParameterizedTest
     @CsvSource({
-            "abcd@abc.com,  Abcd1234!, 홍길동, 01012345678, ROLE_GENERAL_USER",
-            "abcd@abcd.com,, Abcd12345!, 고길동, 01012345679, ROLE_BUSINESS_USER",
-            "abcd@abcde.com, Abcd123456!, 김길동, 01012345680, ROLE_ADMIN"
+            "abcd@abc.com, person1, Abcd1234!, 홍길동, 01012345678, ROLE_GENERAL_USER",
+            "abcd@abcd.com, person2, Abcd12345!, 고길동, 01012345679, ROLE_BUSINESS_USER",
+            "abcd@abcde.com, person3, Abcd123456!, 김길동, 01012345680, ROLE_ADMIN"
     })
-    void findMemberByEmailOrUsername(String email, String password,
-                                     String fullName, String phone, String role) {
+    void findMemberByEmail(String email, String username, String password,
+                           String fullName, String phone, String role) {
         // given
         Member createdMember = MemberTestObjectFactory.createMember(
-                email, password, passwordEncoder, fullName, phone, List.of(role)
+                email, username, password, passwordEncoder, fullName, phone, List.of(role)
         );
         MemberJpaEntity memberJpaEntity = MemberJpaEntity.from(createdMember, cryptoProvider);
 

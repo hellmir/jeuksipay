@@ -39,6 +39,8 @@ public class MemberPersistenceAdapter implements SignUpPort, FindMemberPort, Upd
     public void saveOauthMember(Member member) {
         MemberJpaEntity encryptedMemberJpaEntity = MemberJpaEntity.fromOauth(member, cryptoProvider);
         memberRepository.save(encryptedMemberJpaEntity);
+
+        member.setId(encryptedMemberJpaEntity.getId());
     }
 
     @Override
