@@ -16,8 +16,8 @@ import personal.jeuksipay.member.domain.RefreshToken;
 
 import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
 
-@RequiredArgsConstructor
 @UseCase
+@RequiredArgsConstructor
 public class AuthenticationService implements AuthenticationUseCase {
     private final AuthenticationPort authenticationPort;
     private final FindMemberPort findMemberPort;
