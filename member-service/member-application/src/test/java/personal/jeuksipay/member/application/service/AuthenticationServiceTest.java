@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import personal.jeuksipay.member.application.port.in.AuthenticationResult;
-import personal.jeuksipay.member.application.port.in.command.signInCommand;
+import personal.jeuksipay.member.application.port.in.command.SignInCommand;
 import personal.jeuksipay.member.application.port.out.AuthenticationPort;
 import personal.jeuksipay.member.application.port.out.FindMemberPort;
 import personal.jeuksipay.member.application.port.out.FindRefreshTokenPort;
@@ -43,6 +43,7 @@ class AuthenticationServiceTest {
 
     @Mock
     private FindRefreshTokenPort findRefreshTokenPort;
+
     @Mock
     private PasswordEncoder passwordEncoder;
 
@@ -53,7 +54,7 @@ class AuthenticationServiceTest {
     @Test
     void signInMember() {
         // given
-        signInCommand signInCommand = new signInCommand(EMAIL, PASSWORD1);
+        SignInCommand signInCommand = new SignInCommand(EMAIL, PASSWORD1);
         Member member = MemberTestObjectFactory.createMember(
                 ID_EXAMPLE, EMAIL, USERNAME, PASSWORD1, passwordEncoder,
                 FULL_NAME, PHONE, List.of(ROLE_GENERAL_USER.toString())

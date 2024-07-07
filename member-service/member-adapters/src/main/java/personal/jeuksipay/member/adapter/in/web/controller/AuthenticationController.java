@@ -11,7 +11,7 @@ import personal.jeuksipay.member.adapter.in.web.mapper.MemberRequestToCommandMap
 import personal.jeuksipay.member.adapter.in.web.request.SignInRequest;
 import personal.jeuksipay.member.adapter.in.web.response.SignInResponse;
 import personal.jeuksipay.member.application.port.in.AuthenticationResult;
-import personal.jeuksipay.member.application.port.in.command.signInCommand;
+import personal.jeuksipay.member.application.port.in.command.SignInCommand;
 import personal.jeuksipay.member.application.port.in.usecase.AuthenticationUseCase;
 
 @WebAdapter
@@ -35,7 +35,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<SignInResponse> signInMember
             (@RequestBody @ApiParam(value = SIGN_IN_FORM) SignInRequest signInRequest) {
-        signInCommand signInCommand = MemberRequestToCommandMapper.mapToCommand(signInRequest);
+        SignInCommand signInCommand = MemberRequestToCommandMapper.mapToCommand(signInRequest);
         AuthenticationResult authenticationResult = authenticationUseCase.signInMember(signInCommand);
 
         return ResponseEntity.status(HttpStatus.OK).body(SignInResponse.from(authenticationResult));
