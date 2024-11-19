@@ -1,5 +1,7 @@
 rootProject.name = 'jeuksipay'
+
 include 'common'
+
 include 'member-service'
 include 'member-service:member-adapters'
 findProject(':member-service:member-adapters')?.name = 'member-adapters'
@@ -7,3 +9,11 @@ include 'member-service:member-application'
 findProject(':member-service:member-application')?.name = 'member-application'
 include 'member-service:member-domain'
 findProject(':member-service:member-domain')?.name = 'member-domain'
+
+include 'banking-service'
+include 'banking-service:banking-adapters'
+findProject(':banking-service:banking-adapters')?.name = 'banking-adapters'
+include 'banking-service:banking-application'
+findProject(':banking-service:banking-application')?.name = 'banking-application'
+include 'banking-service:banking-domain'
+findProject(':banking-service:banking-domain')?.name = 'banking-domain'

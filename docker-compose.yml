@@ -35,6 +35,25 @@ services:
       - SPRING_CLOUD_VAULT_HOST=vault
       - SPRING_CLOUD_VAULT_PORT=8200
 
+  banking-adapters:
+    image: jeuksipay-member-adapters:0.0.1-SNAPSHOT
+    networks:
+      - jeuksipay_network
+    ports:
+      - "611:8080"
+    depends_on:
+      - postgres
+    environment:
+      - AXON_AXONSERVER_SERVERS=axon-server:8124
+      - AXON_SERIALIZER_EVENTS=jackson
+      - AXON_SERIALIZER_MESSAGES=jackson
+      - AXON_SERIALIZER_GENERAL=xstream
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/jeuksipay
+      - SPRING_DATASOURCE_USERNAME=postgresuser
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+
   vault:
     image: vault:1.13.1
     networks:
