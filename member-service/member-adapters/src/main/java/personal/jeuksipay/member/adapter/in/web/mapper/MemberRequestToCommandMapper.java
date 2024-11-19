@@ -18,8 +18,8 @@ public class MemberRequestToCommandMapper {
                 .build();
     }
 
-    public static signInCommand mapToCommand(SignInRequest signInRequest) {
-        return new signInCommand(signInRequest.getEmailOrUsername(), signInRequest.getPassword());
+    public static SignInCommand mapToCommand(SignInRequest signInRequest) {
+        return new SignInCommand(signInRequest.getEmailOrUsername(), signInRequest.getPassword());
     }
 
     public static EmailUpdateCommand mapToCommand(EmailUpdateRequest emailUpdateRequest) {

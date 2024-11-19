@@ -36,9 +36,9 @@ public class UpdateMemberController {
     private static final String UPDATE_ADDRESS_FORM = "주소 변경 양식";
 
     private static final String UPDATE_EMAIL = "이메일 주소 변경";
-    private static final String UPDATE_UPDATE_EMAIL_DESCRIPTION
+    private static final String UPDATE_EMAIL_DESCRIPTION
             = "비밀번호와 변경할 이메일 주소를 입력해 이메일 주소를 수정할 수 있습니다.";
-    private static final String UPDATE_UPDATE_EMAIL_FORM = "이메일 주소 변경 양식";
+    private static final String UPDATE_EMAIL_FORM = "이메일 주소 변경 양식";
 
     private static final String UPDATE_PHONE = "전화번호 변경";
     private static final String UPDATE_PHONE_DESCRIPTION = "비밀번호와 변경할 전화번호를 입력해 전화번호를 수정할 수 있습니다.";
@@ -60,11 +60,11 @@ public class UpdateMemberController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @ApiOperation(value = UPDATE_EMAIL, notes = UPDATE_UPDATE_EMAIL_DESCRIPTION)
+    @ApiOperation(value = UPDATE_EMAIL, notes = UPDATE_EMAIL_DESCRIPTION)
     @PreAuthorize(PRINCIPAL_POINTCUT)
     @PatchMapping("/email")
     public ResponseEntity<Void> updateEmail
-            (@RequestBody @ApiParam(value = UPDATE_UPDATE_EMAIL_FORM) EmailUpdateRequest emailUpdateRequest) {
+            (@RequestBody @ApiParam(value = UPDATE_EMAIL_FORM) EmailUpdateRequest emailUpdateRequest) {
         EmailUpdateCommand emailUpdateCommand = MemberRequestToCommandMapper.mapToCommand(emailUpdateRequest);
         updateMemberUseCase.updateEmail(emailUpdateCommand);
 

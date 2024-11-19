@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import personal.jeuksipay.member.application.port.in.command.MemberDeleteCommand;
 import personal.jeuksipay.member.application.port.out.AuthenticationPort;
 import personal.jeuksipay.member.application.port.out.DeleteMemberPort;
