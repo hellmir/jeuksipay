@@ -7,6 +7,9 @@ public class MemberTestConstant {
     public static final String USERNAME2 = "person2";
     public static final String PASSWORD1 = "Abcd1234!";
     public static final String PASSWORD2 = "Abcd12345!";
+
+    public static final String OAUTH_NAME1 = "oauth1";
+    public static final String OAUTH_NAME2 = "oauth2";
     ;
     public static final String FULL_NAME1 = "홍길동";
     public static final String FULL_NAME2 = "고길동";

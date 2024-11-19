@@ -75,6 +75,25 @@ class MemberPersistenceAdapterTest {
         assertThat(memberJpaEntity.getModifiedAt()).isEqualTo(member.getModifiedAt());
     }
 
+    @DisplayName("Oauth 회원 JPA 엔티티를 생성하고 데이터를 암호화 해 저장할 수 있다.")
+    @ParameterizedTest
+    @CsvSource({
+            "abcd@abc.com, person1", "abcd@abcd.com, person2", "abcd@abcde.com, person3"
+    })
+    void saveOauthMember(String oauthEmail, String oauthName) {
+        // given
+        Member member = MemberTestObjectFactory.createMember(oauthEmail, oauthName);
+
+        // when
+        memberPersistenceAdapter.saveOauthMember(member);
+        MemberJpaEntity memberJpaEntity = memberRepository.findById(member.getId()).get();
+
+        // then
+        assertThat(memberJpaEntity.getId()).isEqualTo(member.getId());
+        assertThat(memberJpaEntity.getEmail()).isEqualTo(member.getEmail().encrypt(cryptoProvider));
+        assertThat(memberJpaEntity.getOauthName()).isEqualTo(member.getOauthName().encrypt(cryptoProvider));
+    }
+
     @DisplayName("여러 권한을 가진 회원 JPA 엔티티를 생성하고 데이터를 암호화 해 저장할 수 있다.")
     @ParameterizedTest
     @CsvSource({
@@ -147,6 +166,38 @@ class MemberPersistenceAdapterTest {
         assertThatThrownBy(() -> memberPersistenceAdapter.findMemberById(memberJpaEntity.getId() + 1))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage(MEMEBER_ID_NOT_FOUND_EXCEPTION + (memberJpaEntity.getId() + 1));
+    }
+
+    @DisplayName("이메일 주소를 통해 회원을 조회하고 최종 로그인 시간을 기록할 수 있다.")
+    @ParameterizedTest
+    @CsvSource({
+            "abcd@abc.com, person1, Abcd1234!, 홍길동, 01012345678, ROLE_GENERAL_USER",
+            "abcd@abcd.com, person2, Abcd12345!, 고길동, 01012345679, ROLE_BUSINESS_USER",
+            "abcd@abcde.com, person3, Abcd123456!, 김길동, 01012345680, ROLE_ADMIN"
+    })
+    void findMemberByEmail(String email, String username, String password,
+                           String fullName, String phone, String role) {
+        // given
+        Member createdMember = MemberTestObjectFactory.createMember(
+                email, username, password, passwordEncoder, fullName, phone, List.of(role)
+        );
+        MemberJpaEntity memberJpaEntity = MemberJpaEntity.from(createdMember, cryptoProvider);
+
+        memberRepository.save(memberJpaEntity);
+
+        LocalDateTime beforeLogin = LocalDateTime.now().minusNanos(1);
+
+        // when
+        Member foundMember = memberPersistenceAdapter.findMemberByEmail(email);
+
+        // then
+        LocalDateTime afterLogin = LocalDateTime.now().plusNanos(1);
+
+        assertThat(foundMember.getEmail()).isEqualTo(Email.of(email));
+        assertThat(foundMember.getEmail()).isEqualTo(Email.of(email));
+
+        assertThat(memberJpaEntity.getLastLoggedInAt()).isAfter(beforeLogin);
+        assertThat(memberJpaEntity.getLastLoggedInAt()).isBefore(afterLogin);
     }
 
     @DisplayName("이메일 주소 또는 사용자 이름을 통해 회원을 조회하고 최종 로그인 시간을 기록할 수 있다.")
